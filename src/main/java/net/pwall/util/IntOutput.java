@@ -2,7 +2,7 @@
  * @(#) IntOutput.java
  *
  * int-output  Integer output functions
- * Copyright (c) 2021 Peter Wall
+ * Copyright (c) 2021, 2022 Peter Wall
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -110,6 +110,26 @@ public class IntOutput {
     }
 
     /**
+     * Append an unsigned {@code int} to an {@link Appendable}.  This method outputs the digits left to right, avoiding
+     * the need to allocate a separate object to hold the string form.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   i           the {@code int}
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void appendUnsignedInt(Appendable a, int i) throws IOException {
+        if (i >= 0)
+            appendPositiveInt(a, i);
+        else {
+            int n = (i >>> 1) / 50;
+            appendPositiveInt(a, n);
+            i -= n * 100;
+            a.append(tensDigits[i]);
+            a.append(digits[i]);
+        }
+    }
+
+    /**
      * Append a {@code long} to an {@link Appendable}.  This method outputs the digits left to right, avoiding the need
      * to allocate a separate object to hold the string form.
      *
@@ -150,6 +170,26 @@ public class IntOutput {
             int i = (int)n;
             if (i >= 10)
                 a.append(tensDigits[i]);
+            a.append(digits[i]);
+        }
+    }
+
+    /**
+     * Append an unsigned {@code long} to an {@link Appendable}.  This method outputs the digits left to right, avoiding
+     * the need to allocate a separate object to hold the string form.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   n           the {@code long}
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void appendUnsignedLong(Appendable a, long n) throws IOException {
+        if (n >= 0)
+            appendPositiveLong(a, n);
+        else {
+            long m = (n >>> 1) / 50;
+            appendPositiveLong(a, m);
+            int i = (int)(n - m * 100);
+            a.append(tensDigits[i]);
             a.append(digits[i]);
         }
     }

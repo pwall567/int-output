@@ -54,6 +54,25 @@ public class IntOutputTest {
     }
 
     @Test
+    public void shouldConvertUnsignedIntCorrectly() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.appendUnsignedInt(sb, 0);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendUnsignedInt(sb, 123456);
+        assertEquals("123456", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendUnsignedInt(sb, (int)2147483648L);
+        assertEquals("2147483648", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendUnsignedInt(sb, (int)3456789012L);
+        assertEquals("3456789012", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendUnsignedInt(sb, 0x89ABCDEF);
+        assertEquals("2309737967", sb.toString());
+    }
+
+    @Test
     public void shouldConvertLongCorrectly() throws IOException {
         StringBuilder sb = new StringBuilder();
         IntOutput.appendLong(sb, 0);
@@ -76,6 +95,24 @@ public class IntOutputTest {
         sb.setLength(0);
         IntOutput.appendLong(sb, Long.MIN_VALUE);
         assertEquals("-9223372036854775808", sb.toString());
+    }
+
+    @Test
+    public void shouldConvertUnsignedLongCorrectly() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.appendUnsignedLong(sb, 0);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendUnsignedLong(sb, 1234567890123456789L);
+        assertEquals("1234567890123456789", sb.toString());
+        sb.setLength(0);
+        long n = Long.MAX_VALUE;
+        IntOutput.appendUnsignedLong(sb, n + 1);
+        assertEquals("9223372036854775808", sb.toString());
+        sb.setLength(0);
+        n = 1234567890123456789L;
+        IntOutput.appendUnsignedLong(sb, n * 10);
+        assertEquals("12345678901234567890", sb.toString());
     }
 
     @Test

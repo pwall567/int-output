@@ -39,6 +39,13 @@ If the number is guaranteed to be positive:
         IntOutput.appendPositiveInt(sb, intValue);
 ```
 
+To output an `int` value to an `Appendable`, treating the `int` as unsigned:
+```java
+        StringBuilder sb = new StringBuilder(12);
+        int intValue = 0x89ABCDEF;
+        IntOutput.appendUnsignedInt(sb, intValue);
+```
+
 To output a `long` value to an `Appendable`:
 ```java
         StringBuilder sb = new StringBuilder(20);
@@ -51,6 +58,13 @@ If the `long` value is guaranteed to be positive:
         StringBuilder sb = new StringBuilder(20);
         long longValue = 1234567812345678;
         IntOutput.appendPositiveLong(sb, intValue);
+```
+
+To output a `long` value to an `Appendable`, treating the `long` as unsigned:
+```java
+        StringBuilder sb = new StringBuilder(20);
+        long longValue = 1234567890123456789L;
+        IntOutput.appendUnsignedLong(sb, longValue * 10);
 ```
 
 To output an `int` as 2 digits, including leading zero if required (for example, when outputting a time):
@@ -123,25 +137,25 @@ The following code formats a money value, with dollar sign, commas, decimal poin
 ```
 ## Dependency Specification
 
-The latest version of the library is 1.0, and it may be obtained from the Maven Central repository.
+The latest version of the library is 1.1, and it may be obtained from the Maven Central repository.
 
 ### Maven
 ```xml
     <dependency>
       <groupId>net.pwall.util</groupId>
       <artifactId>int-output</artifactId>
-      <version>1.0</version>
+      <version>1.1</version>
     </dependency>
 ```
 ### Gradle
 ```groovy
-    implementation 'net.pwall.util:int-output:1.0'
+    implementation 'net.pwall.util:int-output:1.1'
 ```
 ### Gradle (kts)
 ```kotlin
-    implementation("net.pwall.util:int-output:1.0")
+    implementation("net.pwall.util:int-output:1.1")
 ```
 
 Peter Wall
 
-2021-08-25
+2022-01-26
