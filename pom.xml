@@ -5,7 +5,7 @@
 
   <groupId>net.pwall.util</groupId>
   <artifactId>int-output</artifactId>
-  <version>1.1</version>
+  <version>1.2</version>
   <name>Integer output functions</name>
   <description>Common functions for optimised integer output</description>
   <packaging>jar</packaging>

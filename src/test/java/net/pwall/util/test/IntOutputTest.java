@@ -158,6 +158,19 @@ public class IntOutputTest {
     }
 
     @Test
+    public void  shouldOutput2DigitsHexCorrectlyUsingLowerCase() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append2HexLC(sb, 0);
+        assertEquals("00", sb.toString());
+        sb.setLength(0);
+        IntOutput.append2HexLC(sb, 1);
+        assertEquals("01", sb.toString());
+        sb.setLength(0);
+        IntOutput.append2HexLC(sb, 0xAB);
+        assertEquals("ab", sb.toString());
+    }
+
+    @Test
     public void  shouldOutput4DigitsHexCorrectly() throws IOException {
         StringBuilder sb = new StringBuilder();
         IntOutput.append4Hex(sb, 0);
@@ -168,6 +181,19 @@ public class IntOutputTest {
         sb.setLength(0);
         IntOutput.append4Hex(sb, 0xABCD);
         assertEquals("ABCD", sb.toString());
+    }
+
+    @Test
+    public void  shouldOutput4DigitsHexCorrectlyUsingLowerCase() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append4HexLC(sb, 0);
+        assertEquals("0000", sb.toString());
+        sb.setLength(0);
+        IntOutput.append4HexLC(sb, 1);
+        assertEquals("0001", sb.toString());
+        sb.setLength(0);
+        IntOutput.append4HexLC(sb, 0xABCD);
+        assertEquals("abcd", sb.toString());
     }
 
     @Test

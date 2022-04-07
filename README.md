@@ -57,7 +57,7 @@ If the `long` value is guaranteed to be positive:
 ```java
         StringBuilder sb = new StringBuilder(20);
         long longValue = 1234567812345678;
-        IntOutput.appendPositiveLong(sb, intValue);
+        IntOutput.appendPositiveLong(sb, longValue);
 ```
 
 To output a `long` value to an `Appendable`, treating the `long` as unsigned:
@@ -79,7 +79,7 @@ milliseconds in a time):
 ```java
         StringBuilder sb = new StringBuilder(12);
         int millis = 567;
-        IntOutput.append3Digits(sb, hours);
+        IntOutput.append3Digits(sb, millis);
 ```
 
 To output an `int` value to an `Appendable`, with the digits grouped in 3s:
@@ -100,14 +100,42 @@ To output a `long` value to an `Appendable`, with the digits grouped in 3s:
 ```java
         StringBuilder sb = new StringBuilder(12);
         long longValue = 1234567812345678;
-        IntOutput.appendLongGrouped(sb, intValue, ',');
+        IntOutput.appendLongGrouped(sb, longValue, ',');
 ```
 
 If the `long` value is guaranteed to be positive:
 ```java
         StringBuilder sb = new StringBuilder(12);
         long longValue = 1234567812345678;
-        IntOutput.appendPositiveLongGrouped(sb, intValue, ',');
+        IntOutput.appendPositiveLongGrouped(sb, longValue, ',');
+```
+
+To output a number as 2 hexadecimal digits:
+```java
+        StringBuilder sb = new StringBuilder(12);
+        int intValue = 160;
+        IntOutput.append2Hex(sb, intValue);
+```
+
+To output a number as 2 hexadecimal digits using lower case for the alphabetic characters:
+```java
+        StringBuilder sb = new StringBuilder(12);
+        int intValue = 160;
+        IntOutput.append2HexLC(sb, intValue);
+```
+
+To output a number as 4 hexadecimal digits:
+```java
+        StringBuilder sb = new StringBuilder(12);
+        int intValue = 65535;
+        IntOutput.append4Hex(sb, intValue);
+```
+
+To output a number as 4 hexadecimal digits using lower case for the alphabetic characters:
+```java
+        StringBuilder sb = new StringBuilder(12);
+        int intValue = 65535;
+        IntOutput.append4HexLC(sb, intValue);
 ```
 
 ## Exceptions
@@ -137,25 +165,25 @@ The following code formats a money value, with dollar sign, commas, decimal poin
 ```
 ## Dependency Specification
 
-The latest version of the library is 1.1, and it may be obtained from the Maven Central repository.
+The latest version of the library is 1.2, and it may be obtained from the Maven Central repository.
 
 ### Maven
 ```xml
     <dependency>
       <groupId>net.pwall.util</groupId>
       <artifactId>int-output</artifactId>
-      <version>1.1</version>
+      <version>1.2</version>
     </dependency>
 ```
 ### Gradle
 ```groovy
-    implementation 'net.pwall.util:int-output:1.1'
+    implementation 'net.pwall.util:int-output:1.2'
 ```
 ### Gradle (kts)
 ```kotlin
-    implementation("net.pwall.util:int-output:1.1")
+    implementation("net.pwall.util:int-output:1.2")
 ```
 
 Peter Wall
 
-2022-01-26
+2022-04-07

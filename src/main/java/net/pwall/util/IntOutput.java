@@ -34,7 +34,7 @@ import java.io.IOException;
  */
 public class IntOutput {
 
-    private static final char[] digits = {
+    public static final char[] digits = {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
@@ -47,7 +47,7 @@ public class IntOutput {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
     };
 
-    private static final char[] tensDigits = {
+    public static final char[] tensDigits = {
             '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
             '1', '1', '1', '1', '1', '1', '1', '1', '1', '1',
             '2', '2', '2', '2', '2', '2', '2', '2', '2', '2',
@@ -60,8 +60,12 @@ public class IntOutput {
             '9', '9', '9', '9', '9', '9', '9', '9', '9', '9'
     };
 
-    private static final char[] digitsHex = {
+    public static final char[] digitsHex = {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
+    };
+
+    public static final char[] digitsHexLC = {
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     };
 
     /**
@@ -244,6 +248,19 @@ public class IntOutput {
     }
 
     /**
+     * Append an {@code int} to an {@link Appendable} as four hexadecimal digits, using lower-case for the alphabetic
+     * characters.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   i           the {@code int}
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void append4HexLC(Appendable a, int i) throws IOException {
+        append2HexLC(a, i >> 8);
+        append2HexLC(a, i);
+    }
+
+    /**
      * Append an {@code int} to an {@link Appendable} as two hexadecimal digits.
      *
      * @param   a           the {@link Appendable}
@@ -253,6 +270,19 @@ public class IntOutput {
     public static void append2Hex(Appendable a, int i) throws IOException {
         a.append(digitsHex[(i >> 4) & 0xF]);
         a.append(digitsHex[i & 0xF]);
+    }
+
+    /**
+     * Append an {@code int} to an {@link Appendable} as two hexadecimal digits, using lower-case for the alphabetic
+     * characters.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   i           the {@code int}
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void append2HexLC(Appendable a, int i) throws IOException {
+        a.append(digitsHexLC[(i >> 4) & 0xF]);
+        a.append(digitsHexLC[i & 0xF]);
     }
 
     /**
