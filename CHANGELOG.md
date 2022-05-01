@@ -2,6 +2,11 @@
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [1.3] - 2022-05-01
+### Added
+- `IntOutput`: functions taking an `IntConsumer`
+- `IntOutput`: additional hex functions
+
 ## [1.2] - 2022-04-07
 ### Added
 - `IntOutput`: added lower case alphabetic hex functions

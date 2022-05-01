@@ -1,8 +1,8 @@
 /*
- * @(#) IntOutputTest.java
+ * @(#) IntOutputAppendableTest.java
  *
  * int-output  Integer output functions
- * Copyright (c) 2021 Peter Wall
+ * Copyright (c) 2021, 2022 Peter Wall
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 
 import net.pwall.util.IntOutput;
 
-public class IntOutputTest {
+public class IntOutputAppendableTest {
 
     @Test
     public void shouldConvertIntCorrectly() throws IOException {
@@ -116,7 +116,7 @@ public class IntOutputTest {
     }
 
     @Test
-    public void  shouldOutput2DigitsCorrectly() throws IOException {
+    public void shouldOutput2DigitsCorrectly() throws IOException {
         StringBuilder sb = new StringBuilder();
         IntOutput.append2Digits(sb, 0);
         assertEquals("00", sb.toString());
@@ -129,7 +129,7 @@ public class IntOutputTest {
     }
 
     @Test
-    public void  shouldOutput3DigitsCorrectly() throws IOException {
+    public void shouldOutput3DigitsCorrectly() throws IOException {
         StringBuilder sb = new StringBuilder();
         IntOutput.append3Digits(sb, 0);
         assertEquals("000", sb.toString());
@@ -145,59 +145,7 @@ public class IntOutputTest {
     }
 
     @Test
-    public void  shouldOutput2DigitsHexCorrectly() throws IOException {
-        StringBuilder sb = new StringBuilder();
-        IntOutput.append2Hex(sb, 0);
-        assertEquals("00", sb.toString());
-        sb.setLength(0);
-        IntOutput.append2Hex(sb, 1);
-        assertEquals("01", sb.toString());
-        sb.setLength(0);
-        IntOutput.append2Hex(sb, 0xAB);
-        assertEquals("AB", sb.toString());
-    }
-
-    @Test
-    public void  shouldOutput2DigitsHexCorrectlyUsingLowerCase() throws IOException {
-        StringBuilder sb = new StringBuilder();
-        IntOutput.append2HexLC(sb, 0);
-        assertEquals("00", sb.toString());
-        sb.setLength(0);
-        IntOutput.append2HexLC(sb, 1);
-        assertEquals("01", sb.toString());
-        sb.setLength(0);
-        IntOutput.append2HexLC(sb, 0xAB);
-        assertEquals("ab", sb.toString());
-    }
-
-    @Test
-    public void  shouldOutput4DigitsHexCorrectly() throws IOException {
-        StringBuilder sb = new StringBuilder();
-        IntOutput.append4Hex(sb, 0);
-        assertEquals("0000", sb.toString());
-        sb.setLength(0);
-        IntOutput.append4Hex(sb, 1);
-        assertEquals("0001", sb.toString());
-        sb.setLength(0);
-        IntOutput.append4Hex(sb, 0xABCD);
-        assertEquals("ABCD", sb.toString());
-    }
-
-    @Test
-    public void  shouldOutput4DigitsHexCorrectlyUsingLowerCase() throws IOException {
-        StringBuilder sb = new StringBuilder();
-        IntOutput.append4HexLC(sb, 0);
-        assertEquals("0000", sb.toString());
-        sb.setLength(0);
-        IntOutput.append4HexLC(sb, 1);
-        assertEquals("0001", sb.toString());
-        sb.setLength(0);
-        IntOutput.append4HexLC(sb, 0xABCD);
-        assertEquals("abcd", sb.toString());
-    }
-
-    @Test
-    public void  shouldOutputIntegerWithGrouping() throws IOException {
+    public void shouldOutputIntegerWithGrouping() throws IOException {
         StringBuilder sb = new StringBuilder();
         IntOutput.appendIntGrouped(sb, 0, ',');
         assertEquals("0", sb.toString());
@@ -237,7 +185,7 @@ public class IntOutputTest {
     }
 
     @Test
-    public void  shouldOutputLongWithGrouping() throws IOException {
+    public void shouldOutputLongWithGrouping() throws IOException {
         StringBuilder sb = new StringBuilder();
         IntOutput.appendLongGrouped(sb, 0, ',');
         assertEquals("0", sb.toString());
@@ -321,6 +269,258 @@ public class IntOutputTest {
             // can't happen - StringBuilder doesn't throw IOException
         }
         return sb.toString();
+    }
+
+    @Test
+    public void shouldConvertIntToHexCorrectly() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.appendIntHex(sb, 0);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHex(sb, 1);
+        assertEquals("1", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHex(sb, 0x23);
+        assertEquals("23", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHex(sb, 0x456);
+        assertEquals("456", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHex(sb, 0xA7B9);
+        assertEquals("A7B9", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHex(sb, 0x8A1B1);
+        assertEquals("8A1B1", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHex(sb, 0xFEEABC);
+        assertEquals("FEEABC", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHex(sb, 0xDEADFEED);
+        assertEquals("DEADFEED", sb.toString());
+    }
+
+    @Test
+    public void shouldConvertIntToHexCorrectlyUsingLowerCase() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.appendIntHexLC(sb, 0);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHexLC(sb, 1);
+        assertEquals("1", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHexLC(sb, 0x23);
+        assertEquals("23", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHexLC(sb, 0x456);
+        assertEquals("456", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHexLC(sb, 0xA7B9);
+        assertEquals("a7b9", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHexLC(sb, 0x8A1B1);
+        assertEquals("8a1b1", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHexLC(sb, 0xFEEABC);
+        assertEquals("feeabc", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendIntHexLC(sb, 0xDEADFEED);
+        assertEquals("deadfeed", sb.toString());
+    }
+
+    @Test
+    public void shouldConvertLongToHexCorrectly() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.appendLongHex(sb, 0);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHex(sb, 1);
+        assertEquals("1", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHex(sb, 0x23);
+        assertEquals("23", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHex(sb, 0x456);
+        assertEquals("456", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHex(sb, 0xA7B9);
+        assertEquals("A7B9", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHex(sb, 0x8A1B1);
+        assertEquals("8A1B1", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHex(sb, 0xFEEABC);
+        assertEquals("FEEABC", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHex(sb, 0xDEADFEEDL);
+        assertEquals("DEADFEED", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHex(sb, 0x123DEADFEEDL);
+        assertEquals("123DEADFEED", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHex(sb, 0x8000000000000000L);
+        assertEquals("8000000000000000", sb.toString());
+    }
+
+    @Test
+    public void shouldConvertLongToHexCorrectlyUsingLowerCase() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.appendLongHexLC(sb, 0);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHexLC(sb, 1);
+        assertEquals("1", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHexLC(sb, 0x23);
+        assertEquals("23", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHexLC(sb, 0x456);
+        assertEquals("456", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHexLC(sb, 0xA7B9);
+        assertEquals("a7b9", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHexLC(sb, 0x8A1B1);
+        assertEquals("8a1b1", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHexLC(sb, 0xFEEABC);
+        assertEquals("feeabc", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHexLC(sb, 0xDEADFEEDL);
+        assertEquals("deadfeed", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHexLC(sb, 0x123DEADFEEDL);
+        assertEquals("123deadfeed", sb.toString());
+        sb.setLength(0);
+        IntOutput.appendLongHexLC(sb, 0x8000000000000000L);
+        assertEquals("8000000000000000", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput8DigitsHexCorrectly() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append8Hex(sb, 0);
+        assertEquals("00000000", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8Hex(sb, 1);
+        assertEquals("00000001", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8Hex(sb, 0xABCD);
+        assertEquals("0000ABCD", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8Hex(sb, 0x9ABCD);
+        assertEquals("0009ABCD", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8Hex(sb, 0x89ABCD);
+        assertEquals("0089ABCD", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8Hex(sb, 0xE89ABCD);
+        assertEquals("0E89ABCD", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8Hex(sb, 0x7E89ABCD);
+        assertEquals("7E89ABCD", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput8DigitsHexCorrectlyUsingLowerCase() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append8HexLC(sb, 0);
+        assertEquals("00000000", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8HexLC(sb, 1);
+        assertEquals("00000001", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8HexLC(sb, 0xABCD);
+        assertEquals("0000abcd", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8HexLC(sb, 0x9ABCD);
+        assertEquals("0009abcd", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8HexLC(sb, 0x89ABCD);
+        assertEquals("0089abcd", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8HexLC(sb, 0xE89ABCD);
+        assertEquals("0e89abcd", sb.toString());
+        sb.setLength(0);
+        IntOutput.append8HexLC(sb, 0xFE89ABCD);
+        assertEquals("fe89abcd", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput4DigitsHexCorrectly() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append4Hex(sb, 0);
+        assertEquals("0000", sb.toString());
+        sb.setLength(0);
+        IntOutput.append4Hex(sb, 1);
+        assertEquals("0001", sb.toString());
+        sb.setLength(0);
+        IntOutput.append4Hex(sb, 0xABCD);
+        assertEquals("ABCD", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput4DigitsHexCorrectlyUsingLowerCase() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append4HexLC(sb, 0);
+        assertEquals("0000", sb.toString());
+        sb.setLength(0);
+        IntOutput.append4HexLC(sb, 1);
+        assertEquals("0001", sb.toString());
+        sb.setLength(0);
+        IntOutput.append4HexLC(sb, 0xABCD);
+        assertEquals("abcd", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput2DigitsHexCorrectly() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append2Hex(sb, 0);
+        assertEquals("00", sb.toString());
+        sb.setLength(0);
+        IntOutput.append2Hex(sb, 1);
+        assertEquals("01", sb.toString());
+        sb.setLength(0);
+        IntOutput.append2Hex(sb, 0xAB);
+        assertEquals("AB", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput2DigitsHexCorrectlyUsingLowerCase() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append2HexLC(sb, 0);
+        assertEquals("00", sb.toString());
+        sb.setLength(0);
+        IntOutput.append2HexLC(sb, 1);
+        assertEquals("01", sb.toString());
+        sb.setLength(0);
+        IntOutput.append2HexLC(sb, 0xAB);
+        assertEquals("ab", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput1DigitHexCorrectly() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append1Hex(sb, 0);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.append1Hex(sb, 1);
+        assertEquals("1", sb.toString());
+        sb.setLength(0);
+        IntOutput.append1Hex(sb, 0xA);
+        assertEquals("A", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput1DigitHexCorrectlyUsingLowerCase() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append1HexLC(sb, 0);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.append1HexLC(sb, 1);
+        assertEquals("1", sb.toString());
+        sb.setLength(0);
+        IntOutput.append1HexLC(sb, 0xA);
+        assertEquals("a", sb.toString());
     }
 
 }
