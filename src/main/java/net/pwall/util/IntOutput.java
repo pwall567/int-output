@@ -105,14 +105,10 @@ public class IntOutput {
         if (i >= 100) {
             int n = i / 100;
             appendPositiveInt(a, n);
-            i -= n * 100;
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
+            append2Digits(a, i - n * 100);
         }
-        else if (i >= 10) {
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
-        }
+        else if (i >= 10)
+            append2Digits(a, i);
         else
             a.append(digits[i]);
     }
@@ -131,9 +127,7 @@ public class IntOutput {
         else {
             int n = (i >>> 1) / 50;
             appendPositiveInt(a, n);
-            i -= n * 100;
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
+            append2Digits(a, i - n * 100);
         }
     }
 
@@ -170,9 +164,7 @@ public class IntOutput {
         if (n >= 100) {
             long m = n / 100;
             appendPositiveLong(a, m);
-            int i = (int)(n - m * 100);
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
+            append2Digits(a, (int)(n - m * 100));
         }
         else {
             int i = (int)n;
@@ -196,9 +188,7 @@ public class IntOutput {
         else {
             long m = (n >>> 1) / 50;
             appendPositiveLong(a, m);
-            int i = (int)(n - m * 100);
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
+            append2Digits(a, (int)(n - m * 100));
         }
     }
 
@@ -281,14 +271,10 @@ public class IntOutput {
         if (i >= 100) {
             int n = i / 100;
             appendPositiveIntGrouped1(a, n, groupingChar);
-            i -= n * 100;
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
+            append2Digits(a, i - n * 100);
         }
-        else if (i >= 10) {
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
-        }
+        else if (i >= 10)
+            append2Digits(a, i);
         else
             a.append(digits[i]);
     }
@@ -315,15 +301,11 @@ public class IntOutput {
         if (i >= 100) {
             int n = i / 100;
             appendPositiveIntGrouped(a, n, groupingChar);
-            i -= n * 100;
             a.append(groupingChar);
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
+            append2Digits(a, i - n * 100);
         }
-        else if (i >= 10) {
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
-        }
+        else if (i >= 10)
+            append2Digits(a, i);
         else
             a.append(digits[i]);
     }
@@ -376,9 +358,7 @@ public class IntOutput {
         if (n >= 100) {
             long m = n / 100;
             appendPositiveLongGrouped1(a, m, groupingChar);
-            int i = (int)(n - m * 100);
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
+            append2Digits(a, (int)(n - m * 100));
         }
         else {
             int i = (int)n;
@@ -411,10 +391,8 @@ public class IntOutput {
         if (n >= 100) {
             long m = n / 100;
             appendPositiveLongGrouped(a, m, groupingChar);
-            int i = (int)(n - m * 100);
             a.append(groupingChar);
-            a.append(tensDigits[i]);
-            a.append(digits[i]);
+            append2Digits(a, (int)(n - m * 100));
         }
         else {
             int i = (int)n;
@@ -657,14 +635,10 @@ public class IntOutput {
         if (i >= 100) {
             int n = i / 100;
             outputPositiveInt(n, consumer);
-            i -= n * 100;
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
+            output2Digits(i - n * 100, consumer);
         }
-        else if (i >= 10) {
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
-        }
+        else if (i >= 10)
+            output2Digits(i, consumer);
         else
             consumer.accept(digits[i]);
     }
@@ -682,9 +656,7 @@ public class IntOutput {
         else {
             int n = (i >>> 1) / 50;
             outputPositiveInt(n, consumer);
-            i -= n * 100;
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
+            output2Digits(i - n * 100, consumer);
         }
     }
 
@@ -719,9 +691,7 @@ public class IntOutput {
         if (n >= 100) {
             long m = n / 100;
             outputPositiveLong(m, consumer);
-            int i = (int)(n - m * 100);
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
+            output2Digits((int)(n - m * 100), consumer);
         }
         else {
             int i = (int)n;
@@ -744,9 +714,7 @@ public class IntOutput {
         else {
             long m = (n >>> 1) / 50;
             outputPositiveLong(m, consumer);
-            int i = (int)(n - m * 100);
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
+            output2Digits((int)(n - m * 100), consumer);
         }
     }
 
@@ -825,14 +793,10 @@ public class IntOutput {
         if (i >= 100) {
             int n = i / 100;
             outputPositiveIntGrouped1(n, groupingChar, consumer);
-            i -= n * 100;
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
+            output2Digits(i - n * 100, consumer);
         }
-        else if (i >= 10) {
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
-        }
+        else if (i >= 10)
+            output2Digits(i, consumer);
         else
             consumer.accept(digits[i]);
     }
@@ -859,15 +823,11 @@ public class IntOutput {
         if (i >= 100) {
             int n = i / 100;
             outputPositiveIntGrouped(n, groupingChar, consumer);
-            i -= n * 100;
             consumer.accept(groupingChar);
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
+            output2Digits(i - n * 100, consumer);
         }
-        else if (i >= 10) {
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
-        }
+        else if (i >= 10)
+            output2Digits(i, consumer);
         else
             consumer.accept(digits[i]);
     }
@@ -918,9 +878,7 @@ public class IntOutput {
         if (n >= 100) {
             long m = n / 100;
             outputPositiveLongGrouped1(m, groupingChar, consumer);
-            int i = (int)(n - m * 100);
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
+            output2Digits((int)(n - m * 100), consumer);
         }
         else {
             int i = (int)n;
@@ -953,10 +911,8 @@ public class IntOutput {
         if (n >= 100) {
             long m = n / 100;
             outputPositiveLongGrouped(m, groupingChar, consumer);
-            int i = (int)(n - m * 100);
             consumer.accept(groupingChar);
-            consumer.accept(tensDigits[i]);
-            consumer.accept(digits[i]);
+            output2Digits((int)(n - m * 100), consumer);
         }
         else {
             int i = (int)n;
@@ -999,8 +955,8 @@ public class IntOutput {
 
     /**
      * Output an {@code int} left-trimmed using an {@link IntConsumer} in hexadecimal, using lower-case for the
-     * alphabetic characters.  This method outputs the digits
-     * left to right, avoiding the need to allocate a separate object to hold the string form.
+     * alphabetic characters.  This method outputs the digits left to right, avoiding the need to allocate a separate
+     * object to hold the string form.
      *
      * @param   i           the {@code int}
      * @param   consumer    the {@link IntConsumer}
@@ -1030,8 +986,8 @@ public class IntOutput {
     }
 
     /**
-     * Append a {@code long} left-trimmed to an {@link Appendable} in hexadecimal.  This method outputs the digits left
-     * to right, avoiding the need to allocate a separate object to hold the string form.
+     * Output a {@code long} left-trimmed using an {@link IntConsumer} in hexadecimal.  This method outputs the digits
+     * left to right, avoiding the need to allocate a separate object to hold the string form.
      *
      * @param   n           the {@code long}
      * @param   consumer    the {@link IntConsumer}
@@ -1048,9 +1004,9 @@ public class IntOutput {
     }
 
     /**
-     * Append a {@code long} left-trimmed to an {@link Appendable} in hexadecimal, using lower-case for the alphabetic
-     * characters.  This method outputs the digits left to right, avoiding the need to allocate a separate object to
-     * hold the string form.
+     * Output a {@code long} left-trimmed using an {@link IntConsumer} in hexadecimal, using lower-case for the
+     * alphabetic characters.  This method outputs the digits left to right, avoiding the need to allocate a separate
+     * object to hold the string form.
      *
      * @param   n           the {@code long}
      * @param   consumer    the {@link IntConsumer}
@@ -1067,7 +1023,7 @@ public class IntOutput {
     }
 
     /**
-     * Append an {@code int} to an {@link Appendable} as eight hexadecimal digits.
+     * Output an {@code int} using an {@link IntConsumer} as eight hexadecimal digits.
      *
      * @param   i           the {@code int}
      * @param   consumer    the {@link IntConsumer}
@@ -1078,8 +1034,8 @@ public class IntOutput {
     }
 
     /**
-     * Append an {@code int} to an {@link Appendable} as eight hexadecimal digits, using lower-case for the alphabetic
-     * characters.
+     * Output an {@code int} using an {@link IntConsumer} as eight hexadecimal digits, using lower-case for the
+     * alphabetic characters.
      *
      * @param   i           the {@code int}
      * @param   consumer    the {@link IntConsumer}
@@ -1136,7 +1092,7 @@ public class IntOutput {
     }
 
     /**
-     * Append an {@code int} to an {@link Appendable} as a single hexadecimal digit.
+     * Output an {@code int} using an {@link IntConsumer} as a single hexadecimal digit.
      *
      * @param   i           the {@code int}
      * @param   consumer    the {@link IntConsumer}
@@ -1146,8 +1102,8 @@ public class IntOutput {
     }
 
     /**
-     * Append an {@code int} to an {@link Appendable} as a single hexadecimal digit, using lower-case for the alphabetic
-     * characters.
+     * Output an {@code int} using an {@link IntConsumer} as a single hexadecimal digit, using lower-case for the
+     * alphabetic characters.
      *
      * @param   i           the {@code int}
      * @param   consumer    the {@link IntConsumer}

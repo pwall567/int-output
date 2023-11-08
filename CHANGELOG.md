@@ -2,6 +2,10 @@
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [Unreleased]
+### Changed
+- `IntOutput`: minor tweaks / optimisations
+
 ## [1.3] - 2022-05-01
 ### Added
 - `IntOutput`: functions taking an `IntConsumer`
