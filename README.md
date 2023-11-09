@@ -46,20 +46,25 @@ several functions to output fixed-length strings left-padded with zeros.
 
 ### Decimal
 
-Function                    | Parameter | Output
-----------------------------|-----------|----------------------------------------------------------------
-`appendInt`                 | `int`     | left-trimmed
-`appendPositiveInt`         | `int`     | left-trimmed (value must be positive)
-`appendUnsignedInt`         | `int`     | left-trimmed (value is treated as unsigned)
-`appendLong`                | `long`    | left-trimmed
-`appendPositiveLong`        | `long`    | left-trimmed (value must be positive)
-`appendUnsignedLong`        | `long`    | left-trimmed (value is treated as unsigned)
-`append2Digits`             | `int`     | 2 digits left filled with zeros
-`append3Digits`             | `int`     | 3 digits left filled with zeros
-`appendIntGrouped`          | `int`     | left-trimmed, output in 3-digit groups
-`appendPositiveIntGrouped`  | `int`     | left-trimmed, output in 3-digit groups (value must be positive)
-`appendLongGrouped`         | `long`    | left-trimmed, output in 3-digit groups
-`appendPositiveLongGrouped` | `long`    | left-trimmed, output in 3-digit groups (value must be positive)
+| Function                    | Parameter | Output                                                                             |
+|-----------------------------|-----------|------------------------------------------------------------------------------------|
+| `appendInt`                 | `int`     | left-trimmed                                                                       |
+| `appendPositiveInt`         | `int`     | left-trimmed (value must be positive)                                              |
+| `appendUnsignedInt`         | `int`     | left-trimmed (value is treated as unsigned)                                        |
+| `appendIntScaled`           | `int`     | left-trimmed with decimal separator as indicated by scale                          |
+| `appendPositiveIntScaled`   | `int`     | left-trimmed with decimal separator as indicated by scale (value must be positive) |
+| `appendLong`                | `long`    | left-trimmed                                                                       |
+| `appendPositiveLong`        | `long`    | left-trimmed (value must be positive)                                              |
+| `appendUnsignedLong`        | `long`    | left-trimmed (value is treated as unsigned)                                        |
+| `appendLongScaled`          | `long`    | left-trimmed with decimal separator as indicated by scale                          |
+| `appendPositiveLongScaled`  | `long`    | left-trimmed with decimal separator as indicated by scale (value must be positive) |
+| `append2Digits`             | `int`     | 2 digits left filled with zeros                                                    |
+| `append3Digits`             | `int`     | 3 digits left filled with zeros                                                    |
+| `appendIntGrouped`          | `int`     | left-trimmed, output in 3-digit groups                                             |
+| `appendPositiveIntGrouped`  | `int`     | left-trimmed, output in 3-digit groups (value must be positive)                    |
+| `appendLongGrouped`         | `long`    | left-trimmed, output in 3-digit groups                                             |
+| `appendPositiveLongGrouped` | `long`    | left-trimmed, output in 3-digit groups (value must be positive)                    |
+
 (the "grouped" forms output digits in blocks of three, separated by a nominated separator character)
 
 For each `appendXxxx` function there is an equivalent `outputXxxx` function, which instead of taking an `Appendable`
@@ -67,20 +72,21 @@ parameter, takes an `IntConsumer` which will be called with each output characte
 
 ### Hexadecimal
 
-Function          | Parameter | Output
-------------------|-----------|-----------------------------------------------------------------
-`appendIntHex`    | `int`     | left-trimmed, hexadecimal
-`appendIntHexLC`  | `int`     | left-trimmed, hexadecimal (using lower-case alphabetics)
-`appendLongHex`   | `long`    | left-trimmed, hexadecimal
-`appendLongHexLC` | `long`    | left-trimmed, hexadecimal (using lower-case alphabetics)
-`append8Hex`      | `int`     | 8 digits left-padded, hexadecimal
-`append8HexLC`    | `int`     | 8 digits left-padded, hexadecimal (using lower-case alphabetics)
-`append4Hex`      | `int`     | 4 digits left-padded, hexadecimal
-`append4HexLC`    | `int`     | 4 digits left-padded, hexadecimal (using lower-case alphabetics)
-`append2Hex`      | `int`     | 2 digits left-padded, hexadecimal
-`append2HexLC`    | `int`     | 2 digits left-padded, hexadecimal (using lower-case alphabetics)
-`append1Hex`      | `int`     | 1 digit, hexadecimal
-`append1HexLC`    | `int`     | 1 digit, hexadecimal (using lower-case alphabetics)
+| Function          | Parameter | Output                                                           |
+|-------------------|-----------|------------------------------------------------------------------|
+| `appendIntHex`    | `int`     | left-trimmed, hexadecimal                                        |
+| `appendIntHexLC`  | `int`     | left-trimmed, hexadecimal (using lower-case alphabetics)         |
+| `appendLongHex`   | `long`    | left-trimmed, hexadecimal                                        |
+| `appendLongHexLC` | `long`    | left-trimmed, hexadecimal (using lower-case alphabetics)         |
+| `append8Hex`      | `int`     | 8 digits left-padded, hexadecimal                                |
+| `append8HexLC`    | `int`     | 8 digits left-padded, hexadecimal (using lower-case alphabetics) |
+| `append4Hex`      | `int`     | 4 digits left-padded, hexadecimal                                |
+| `append4HexLC`    | `int`     | 4 digits left-padded, hexadecimal (using lower-case alphabetics) |
+| `append2Hex`      | `int`     | 2 digits left-padded, hexadecimal                                |
+| `append2HexLC`    | `int`     | 2 digits left-padded, hexadecimal (using lower-case alphabetics) |
+| `append1Hex`      | `int`     | 1 digit, hexadecimal                                             |
+| `append1HexLC`    | `int`     | 1 digit, hexadecimal (using lower-case alphabetics)              |
+
 (the functions all have two variants, one which uses upper-case characters for the hexadecimal digits and one which uses
 lower-case)
 
@@ -110,6 +116,15 @@ To output an `int` value to an `Appendable`, treating the `int` as unsigned:
         IntOutput.appendUnsignedInt(sb, intValue);
 ```
 
+To output an `int` value to an `Appendable`, with number of decimal places specified as a scale:
+```java
+        StringBuilder sb = new StringBuilder(12);
+        int intValue = 12345;
+        IntOutput.appendIntScaled(sb, intValue, 2, '.'); // 2 decimal places with '.' as separator
+```
+Negative scale values (indicating that decimal point is to the right of the last digit) are ignored.
+It is left to the user to decide whether to output additional zeros following the number, or to add an exponent suffix.
+
 To output a `long` value to an `Appendable`:
 ```java
         StringBuilder sb = new StringBuilder(20);
@@ -130,6 +145,14 @@ To output a `long` value to an `Appendable`, treating the `long` as unsigned:
         long longValue = 1234567890123456789L;
         IntOutput.appendUnsignedLong(sb, longValue * 10);
 ```
+
+To output a `long` value to an `Appendable`, with number of decimal places specified as a scale:
+```java
+        StringBuilder sb = new StringBuilder(12);
+        long longValue = 1234567890123456789L;
+        IntOutput.appendLongScaled(sb, intValue, 3, '.'); // 3 decimal places with '.' as separator
+```
+See the note above (following the `int` version of the function) regarding negative scale values.
 
 To output an `int` as 2 digits, including leading zero if required (for example, when outputting a time):
 ```java
@@ -236,25 +259,25 @@ The following code formats a money value, with dollar sign, commas, decimal poin
 
 ## Dependency Specification
 
-The latest version of the library is 1.3, and it may be obtained from the Maven Central repository.
+The latest version of the library is 2.0, and it may be obtained from the Maven Central repository.
 
 ### Maven
 ```xml
     <dependency>
       <groupId>net.pwall.util</groupId>
       <artifactId>int-output</artifactId>
-      <version>1.3</version>
+      <version>2.0</version>
     </dependency>
 ```
 ### Gradle
 ```groovy
-    implementation 'net.pwall.util:int-output:1.3'
+    implementation 'net.pwall.util:int-output:2.0'
 ```
 ### Gradle (kts)
 ```kotlin
-    implementation("net.pwall.util:int-output:1.3")
+    implementation("net.pwall.util:int-output:2.0")
 ```
 
 Peter Wall
 
-2022-05-01
+2023-11-09

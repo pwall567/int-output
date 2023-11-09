@@ -2,9 +2,12 @@
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
-## [Unreleased]
+## [2.0] - 2023-11-09
 ### Changed
 - `IntOutput`: minor tweaks / optimisations
+- `IntOutput`: added `appendIntScaled`, `appendLongScaled`, `outputIntScaled` and `outputLongScaled`
+- `IntOutput`: replaced `MIN_INTEGER_STRING` and `MIN_LONG_STRING` with `MIN_INTEGER_DIGITS` and `MIN_LONG_DIGITS`,
+  omitting sign (possible breaking change)
 
 ## [1.3] - 2022-05-01
 ### Added

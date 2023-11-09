@@ -2,7 +2,7 @@
  * @(#) IntOutputIntConsumerTest.java
  *
  * int-output  Integer output functions
- * Copyright (c) 2022 Peter Wall
+ * Copyright (c) 2022, 2023 Peter Wall
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@
 
 package net.pwall.util.test;
 
+import java.io.IOException;
 import java.util.function.IntConsumer;
 
 import org.junit.Test;
@@ -75,6 +76,90 @@ public class IntOutputIntConsumerTest {
     }
 
     @Test
+    public void shouldConvertIntScaledUsingLambda() {
+        StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
+        char separator = '.';
+        IntOutput.outputIntScaled(0, 0, separator, ic);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(0, 1, separator, ic);
+        assertEquals("0.0", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(0, 2, separator, ic);
+        assertEquals("0.00", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(0, 3, separator, ic);
+        assertEquals("0.000", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(123456, 0, separator, ic);
+        assertEquals("123456", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(123456, 1, separator, ic);
+        assertEquals("12345.6", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(123456, 2, separator, ic);
+        assertEquals("1234.56", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(123456, 3, separator, ic);
+        assertEquals("123.456", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(123456, 6, separator, ic);
+        assertEquals("0.123456", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(123456, 7, separator, ic);
+        assertEquals("0.0123456", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(123456, 8, separator, ic);
+        assertEquals("0.00123456", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(-22334455, 0, separator, ic);
+        assertEquals("-22334455", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(-22334455, 1, separator, ic);
+        assertEquals("-2233445.5", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(-22334455, 2, separator, ic);
+        assertEquals("-223344.55", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(-22334455, 3, separator, ic);
+        assertEquals("-22334.455", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MAX_VALUE, 0, separator, ic);
+        assertEquals("2147483647", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MAX_VALUE, 1, separator, ic);
+        assertEquals("214748364.7", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MAX_VALUE, 2, separator, ic);
+        assertEquals("21474836.47", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MAX_VALUE, 3, separator, ic);
+        assertEquals("2147483.647", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 0, separator, ic);
+        assertEquals("-2147483648", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 1, separator, ic);
+        assertEquals("-214748364.8", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 2, separator, ic);
+        assertEquals("-21474836.48", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 3, separator, ic);
+        assertEquals("-2147483.648", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 10, separator, ic);
+        assertEquals("-0.2147483648", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 11, separator, ic);
+        assertEquals("-0.02147483648", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 12, separator, ic);
+        assertEquals("-0.002147483648", sb.toString());
+    }
+
+    @Test
     public void shouldConvertLongCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
         IntConsumer ic = ch -> sb.append((char)ch);
@@ -117,6 +202,126 @@ public class IntOutputIntConsumerTest {
         n = 1234567890123456789L;
         IntOutput.outputUnsignedLong(n * 10, ic);
         assertEquals("12345678901234567890", sb.toString());
+    }
+
+    @Test
+    public void shouldConvertLongScaled() {
+        char separator = '.';
+        StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputLongScaled(0, 0, separator, ic);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(0, 1, separator, ic);
+        assertEquals("0.0", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(0, 2, separator, ic);
+        assertEquals("0.00", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(0, 3, separator, ic);
+        assertEquals("0.000", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456, 0, separator, ic);
+        assertEquals("123456", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456, 1, separator, ic);
+        assertEquals("12345.6", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456, 2, separator, ic);
+        assertEquals("1234.56", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456, 3, separator, ic);
+        assertEquals("123.456", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456, 6, separator, ic);
+        assertEquals("0.123456", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456, 7, separator, ic);
+        assertEquals("0.0123456", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456, 8, separator, ic);
+        assertEquals("0.00123456", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(-22334455, 0, separator, ic);
+        assertEquals("-22334455", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(-22334455, 1, separator, ic);
+        assertEquals("-2233445.5", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(-22334455, 2, separator, ic);
+        assertEquals("-223344.55", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(-22334455, 3, separator, ic);
+        assertEquals("-22334.455", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456789012345678L, 0, separator, ic);
+        assertEquals("123456789012345678", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456789012345678L, 1, separator, ic);
+        assertEquals("12345678901234567.8", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456789012345678L, 2, separator, ic);
+        assertEquals("1234567890123456.78", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456789012345678L, 3, separator, ic);
+        assertEquals("123456789012345.678", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456789012345678L, 18, separator, ic);
+        assertEquals("0.123456789012345678", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456789012345678L, 19, separator, ic);
+        assertEquals("0.0123456789012345678", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(123456789012345678L, 20, separator, ic);
+        assertEquals("0.00123456789012345678", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(-2233445566778899L, 0, separator, ic);
+        assertEquals("-2233445566778899", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(-2233445566778899L, 1, separator, ic);
+        assertEquals("-223344556677889.9", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(-2233445566778899L, 16, separator, ic);
+        assertEquals("-0.2233445566778899", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(-2233445566778899L, 17, separator, ic);
+        assertEquals("-0.02233445566778899", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MAX_VALUE, 0, separator, ic);
+        assertEquals("9223372036854775807", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MAX_VALUE, 1, separator, ic);
+        assertEquals("922337203685477580.7", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MAX_VALUE, 2, separator, ic);
+        assertEquals("92233720368547758.07", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MAX_VALUE, 3, separator, ic);
+        assertEquals("9223372036854775.807", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 0, separator, ic);
+        assertEquals("-9223372036854775808", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 1, separator, ic);
+        assertEquals("-922337203685477580.8", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 2, separator, ic);
+        assertEquals("-92233720368547758.08", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 3, separator, ic);
+        assertEquals("-9223372036854775.808", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 10, separator, ic);
+        assertEquals("-922337203.6854775808", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 19, separator, ic);
+        assertEquals("-0.9223372036854775808", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 20, separator, ic);
+        assertEquals("-0.09223372036854775808", sb.toString());
+        sb.setLength(0);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 21, separator, ic);
+        assertEquals("-0.009223372036854775808", sb.toString());
     }
 
     @Test

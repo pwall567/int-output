@@ -2,7 +2,7 @@
  * @(#) IntOutput.java
  *
  * int-output  Integer output functions
- * Copyright (c) 2021, 2022 Peter Wall
+ * Copyright (c) 2021, 2022, 2023 Peter Wall
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -69,8 +69,8 @@ public class IntOutput {
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
     };
 
-    public static final String MIN_INTEGER_STRING = "-2147483648";
-    public static final String MIN_LONG_STRING = "-9223372036854775808";
+    public static final String MIN_INTEGER_DIGITS = "2147483648";
+    public static final String MIN_LONG_DIGITS = "9223372036854775808";
 
     /**
      * Append an {@code int} left-trimmed to an {@link Appendable}.  This method outputs the digits left to right,
@@ -82,12 +82,11 @@ public class IntOutput {
      */
     public static void appendInt(Appendable a, int i) throws IOException {
         if (i < 0) {
+            a.append('-');
             if (i == Integer.MIN_VALUE)
-                a.append(MIN_INTEGER_STRING);
-            else {
-                a.append('-');
+                a.append(MIN_INTEGER_DIGITS);
+            else
                 appendPositiveInt(a, -i);
-            }
         }
         else
             appendPositiveInt(a, i);
@@ -132,6 +131,105 @@ public class IntOutput {
     }
 
     /**
+     * Append an {@code int} left-trimmed to an {@link Appendable}, using a scale parameter to indicate the number of
+     * decimal places.  This method outputs the digits left to right, avoiding the need to allocate a separate object to
+     * hold the string form.
+     * <br>
+     * Negative scale values (indicating that decimal point is to the right of the last digit) are ignored.  It is left
+     * to the user to decide whether to output additional zeros following the number, or to add an exponent suffix.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   i           the {@code int}
+     * @param   scale       the number of decimal places
+     * @param   separator   the decimal separator character to use
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void appendIntScaled(Appendable a, int i, int scale, char separator) throws IOException {
+        if (i < 0) {
+            a.append('-');
+            if (i == Integer.MIN_VALUE)
+                appendStringScaled(a, MIN_INTEGER_DIGITS, scale, separator);
+            else
+                appendPositiveIntScaled(a, -i, scale, separator);
+        }
+        else
+            appendPositiveIntScaled(a, i, scale, separator);
+    }
+
+    /**
+     * Append a given string (representing a decimal value) to an {@link Appendable}, using a scale parameter to
+     * indicate the number of decimal places.
+
+     * @param   a           the {@link Appendable}
+     * @param   string      the string of digits
+     * @param   scale       the number of decimal places
+     * @param   separator   the decimal separator character to use
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    private static void appendStringScaled(Appendable a, String string, int scale, char separator) throws IOException {
+        if (scale <= 0)
+            a.append(string);
+        else {
+            int length = string.length();
+            if (scale >= length) {
+                a.append('0');
+                a.append(separator);
+                for (int i = scale; i > length; i--)
+                    a.append('0');
+                a.append(string);
+            }
+            else {
+                int insertionPoint = length - scale;
+                for (int i = 0; i < length; i++) {
+                    if (i == insertionPoint)
+                        a.append(separator);
+                    a.append(string.charAt(i));
+                }
+            }
+        }
+    }
+
+    /**
+     * Append a positive {@code int} left-trimmed to an {@link Appendable}, using a scale parameter to indicate the
+     * number of decimal places.  This method outputs the digits left to right, avoiding the need to allocate a separate
+     * object to hold the string form.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   i           the {@code int}
+     * @param   scale       the number of decimal places
+     * @param   separator   the decimal separator character to use
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void appendPositiveIntScaled(Appendable a, int i, int scale, char separator) throws IOException {
+        if (scale > 2) {
+            int n = i / 100;
+            appendPositiveIntScaled(a, n, scale - 2, separator);
+            append2Digits(a, i - n * 100);
+        }
+        else if (scale == 2) {
+            int n = i / 100;
+            appendPositiveInt(a, n);
+            a.append(separator);
+            append2Digits(a, i - n * 100);
+        }
+        else if (scale == 1) {
+            int n = i / 10;
+            appendPositiveInt(a, n);
+            a.append(separator);
+            a.append(digits[i - n * 10]);
+        }
+        else if (i >= 100) {
+            int n = i / 100;
+            appendPositiveInt(a, n);
+            append2Digits(a, i - n * 100);
+        }
+        else if (i >= 10)
+            append2Digits(a, i);
+        else
+            a.append(digits[i]);
+    }
+
+    /**
      * Append a {@code long} left-trimmed to an {@link Appendable}.  This method outputs the digits left to right,
      * avoiding the need to allocate a separate object to hold the string form.
      *
@@ -141,12 +239,11 @@ public class IntOutput {
      */
     public static void appendLong(Appendable a, long n) throws IOException {
         if (n < 0) {
+            a.append('-');
             if (n == Long.MIN_VALUE)
-                a.append(MIN_LONG_STRING);
-            else {
-                a.append('-');
+                a.append(MIN_LONG_DIGITS);
+            else
                 appendPositiveLong(a, -n);
-            }
         }
         else
             appendPositiveLong(a, n);
@@ -189,6 +286,74 @@ public class IntOutput {
             long m = (n >>> 1) / 50;
             appendPositiveLong(a, m);
             append2Digits(a, (int)(n - m * 100));
+        }
+    }
+
+    /**
+     * Append an {@code int} left-trimmed to an {@link Appendable}, using a scale parameter to indicate the number of
+     * decimal places.  This method outputs the digits left to right, avoiding the need to allocate a separate object to
+     * hold the string form.
+     * <br>
+     * Negative scale values (indicating that decimal point is to the right of the last digit) are ignored.  It is left
+     * to the user to decide whether to output additional zeros following the number, or to add an exponent suffix.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   n           the {@code long}
+     * @param   scale       the number of decimal places
+     * @param   separator   the decimal separator character to use
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void appendLongScaled(Appendable a, long n, int scale, char separator) throws IOException {
+        if (n < 0) {
+            a.append('-');
+            if (n == Long.MIN_VALUE)
+                appendStringScaled(a, MIN_LONG_DIGITS, scale, separator);
+            else
+                appendPositiveLongScaled(a, -n, scale, separator);
+        }
+        else
+            appendPositiveLongScaled(a, n, scale, separator);
+    }
+
+    /**
+     * Append a positive {@code long} left-trimmed to an {@link Appendable}, using a scale parameter to indicate the
+     * number of decimal places.  This method outputs the digits left to right, avoiding the need to allocate a separate
+     * object to hold the string form.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   n           the {@code int}
+     * @param   scale       the number of decimal places
+     * @param   separator   the decimal separator character to use
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void appendPositiveLongScaled(Appendable a, long n, int scale, char separator) throws IOException {
+        if (scale > 2) {
+            long m = n / 100;
+            appendPositiveLongScaled(a, m, scale - 2, separator);
+            append2Digits(a, (int)(n - m * 100));
+        }
+        else if (scale == 2) {
+            long m = n / 100;
+            appendPositiveLong(a, m);
+            a.append(separator);
+            append2Digits(a, (int)(n - m * 100));
+        }
+        else if (scale == 1) {
+            long m = n / 10;
+            appendPositiveLong(a, m);
+            a.append(separator);
+            a.append(digits[(int)(n - m * 10)]);
+        }
+        else if (n >= 100) {
+            long m = n / 100;
+            appendPositiveLong(a, m);
+            append2Digits(a, (int)(n - m * 100));
+        }
+        else {
+            int i = (int)n;
+            if (i >= 10)
+                a.append(tensDigits[i]);
+            a.append(digits[i]);
         }
     }
 
@@ -240,19 +405,18 @@ public class IntOutput {
      */
     public static void appendIntGrouped(Appendable a, int i, char groupingChar) throws IOException {
         if (i < 0) {
+            a.append('-');
             if (i == Integer.MIN_VALUE) {
-                a.append(MIN_INTEGER_STRING, 0, 2);
+                a.append(MIN_INTEGER_DIGITS.charAt(0));
                 a.append(groupingChar);
-                a.append(MIN_INTEGER_STRING, 2, 5);
+                a.append(MIN_INTEGER_DIGITS, 1, 4);
                 a.append(groupingChar);
-                a.append(MIN_INTEGER_STRING, 5, 8);
+                a.append(MIN_INTEGER_DIGITS, 4, 7);
                 a.append(groupingChar);
-                a.append(MIN_INTEGER_STRING, 8, 11);
+                a.append(MIN_INTEGER_DIGITS, 7, 10);
             }
-            else {
-                a.append('-');
+            else
                 appendPositiveIntGrouped(a, -i, groupingChar);
-            }
         }
         else
             appendPositiveIntGrouped(a, i, groupingChar);
@@ -321,25 +485,24 @@ public class IntOutput {
      */
     public static void appendLongGrouped(Appendable a, long n, char groupingChar) throws IOException {
         if (n < 0) {
+            a.append('-');
             if (n == Long.MIN_VALUE) {
-                a.append(MIN_LONG_STRING, 0, 2);
+                a.append(MIN_LONG_DIGITS.charAt(0));
                 a.append(groupingChar);
-                a.append(MIN_LONG_STRING, 2, 5);
+                a.append(MIN_LONG_DIGITS, 1, 4);
                 a.append(groupingChar);
-                a.append(MIN_LONG_STRING, 5, 8);
+                a.append(MIN_LONG_DIGITS, 4, 7);
                 a.append(groupingChar);
-                a.append(MIN_LONG_STRING, 8, 11);
+                a.append(MIN_LONG_DIGITS, 7, 10);
                 a.append(groupingChar);
-                a.append(MIN_LONG_STRING, 11, 14);
+                a.append(MIN_LONG_DIGITS, 10, 13);
                 a.append(groupingChar);
-                a.append(MIN_LONG_STRING, 14, 17);
+                a.append(MIN_LONG_DIGITS, 13, 16);
                 a.append(groupingChar);
-                a.append(MIN_LONG_STRING, 17, 20);
+                a.append(MIN_LONG_DIGITS, 16, 19);
             }
-            else {
-                a.append('-');
+            else
                 appendPositiveLongGrouped(a, -n, groupingChar);
-            }
         }
         else
             appendPositiveLongGrouped(a, n, groupingChar);
@@ -613,12 +776,11 @@ public class IntOutput {
      */
     public static void outputInt(int i, IntConsumer consumer) {
         if (i < 0) {
+            consumer.accept('-');
             if (i == Integer.MIN_VALUE)
-                outputString(MIN_INTEGER_STRING, consumer);
-            else {
-                consumer.accept('-');
+                outputString(MIN_INTEGER_DIGITS, consumer);
+            else
                 outputPositiveInt(-i, consumer);
-            }
         }
         else
             outputPositiveInt(i, consumer);
@@ -661,6 +823,99 @@ public class IntOutput {
     }
 
     /**
+     * Output an {@code int} left-trimmed using an {@link IntConsumer}, using a scale parameter to indicate the number
+     * of decimal places.  This method outputs the digits left to right, avoiding the need to allocate a separate object
+     * to hold the string form.
+     *
+     * @param   i           the {@code int}
+     * @param   scale       the number of decimal places
+     * @param   separator   the decimal separator character to use
+     * @param   consumer    the {@link IntConsumer}
+     */
+    public static void outputIntScaled(int i, int scale, char separator, IntConsumer consumer) {
+        if (i < 0) {
+            consumer.accept('-');
+            if (i == Integer.MIN_VALUE)
+                outputStringScaled(MIN_INTEGER_DIGITS, scale, separator, consumer);
+            else
+                outputPositiveIntScaled(-i, scale, separator, consumer);
+        }
+        else
+            outputPositiveIntScaled(i, scale, separator, consumer);
+    }
+
+    /**
+     * Output a given string (representing a decimal value) using an {@link IntConsumer}, using a scale parameter to
+     * indicate the number of decimal places.
+
+     * @param   string      the string of digits
+     * @param   scale       the number of decimal places
+     * @param   separator   the decimal separator character to use
+     * @param   consumer    the {@link IntConsumer}
+     */
+    private static void outputStringScaled(String string, int scale, char separator, IntConsumer consumer) {
+        if (scale <= 0)
+            outputString(string, consumer);
+        else {
+            int length = string.length();
+            if (scale >= length) {
+                consumer.accept('0');
+                consumer.accept(separator);
+                for (int i = scale; i > length; i--)
+                    consumer.accept('0');
+                outputString(string, consumer);
+            }
+            else {
+                int insertionPoint = length - scale;
+                for (int i = 0; i < length; i++) {
+                    if (i == insertionPoint)
+                        consumer.accept(separator);
+                    consumer.accept(string.charAt(i));
+                }
+            }
+        }
+    }
+
+    /**
+     * Output a positive {@code int} left-trimmed using an {@link IntConsumer}, using a scale parameter to indicate the
+     * number of decimal places.  This method outputs the digits left to right, avoiding the need to allocate a separate
+     * object to hold the string form.
+     *
+     * @param   i           the {@code int}
+     * @param   scale       the number of decimal places
+     * @param   separator   the decimal separator character to use
+     * @param   consumer    the {@link IntConsumer}
+     */
+    public static void outputPositiveIntScaled(int i, int scale, char separator, IntConsumer consumer) {
+        if (scale > 2) {
+            int n = i / 100;
+            outputPositiveIntScaled(n, scale - 2, separator, consumer);
+            output2Digits(i - n * 100, consumer);
+        }
+        else if (scale == 2) {
+            int n = i / 100;
+            outputPositiveInt(n, consumer);
+            consumer.accept(separator);
+            output2Digits(i - n * 100, consumer);
+        }
+        else if (scale == 1) {
+            int n = i / 10;
+            outputPositiveInt(n, consumer);
+            consumer.accept(separator);
+            consumer.accept(digits[i - n * 10]);
+        }
+        else if (i >= 100) {
+            int n = i / 100;
+            outputPositiveInt(n, consumer);
+            output2Digits(i - n * 100, consumer);
+        }
+        else if (i >= 10)
+            output2Digits(i, consumer);
+        else
+            consumer.accept(digits[i]);
+    }
+
+    /**
      * Output a {@code long} left-trimmed using an {@link IntConsumer}.  This method outputs the digits left to right,
      * avoiding the need to allocate a separate object to hold the string form.
      *
@@ -669,12 +924,11 @@ public class IntOutput {
      */
     public static void outputLong(long n, IntConsumer consumer) {
         if (n < 0) {
+            consumer.accept('-');
             if (n == Long.MIN_VALUE)
-                outputString(MIN_LONG_STRING, consumer);
-            else {
-                consumer.accept('-');
+                outputString(MIN_LONG_DIGITS, consumer);
+            else
                 outputPositiveLong(-n, consumer);
-            }
         }
         else
             outputPositiveLong(n, consumer);
@@ -715,6 +969,69 @@ public class IntOutput {
             long m = (n >>> 1) / 50;
             outputPositiveLong(m, consumer);
             output2Digits((int)(n - m * 100), consumer);
+        }
+    }
+
+    /**
+     * Append an {@code int} left-trimmed to an {@link Appendable}, using a scale parameter to indicate the number of
+     * decimal places.  This method outputs the digits left to right, avoiding the need to allocate a separate object to
+     * hold the string form.
+     *
+     * @param   n           the {@code long}
+     * @param   scale       the number of decimal places
+     * @param   separator   the decimal separator character to use
+     * @param   consumer    the {@link IntConsumer}
+     */
+    public static void outputLongScaled(long n, int scale, char separator, IntConsumer consumer) {
+        if (n < 0) {
+            consumer.accept('-');
+            if (n == Long.MIN_VALUE)
+                outputStringScaled(MIN_LONG_DIGITS, scale, separator, consumer);
+            else
+                outputPositiveLongScaled(-n, scale, separator, consumer);
+        }
+        else
+            outputPositiveLongScaled(n, scale, separator, consumer);
+    }
+
+    /**
+     * Append a positive {@code long} left-trimmed to an {@link Appendable}, using a scale parameter to indicate the
+     * number of decimal places.  This method outputs the digits left to right, avoiding the need to allocate a separate
+     * object to hold the string form.
+     *
+     * @param   n           the {@code int}
+     * @param   scale       the number of decimal places
+     * @param   separator   the decimal separator character to use
+     * @param   consumer    the {@link IntConsumer}
+     */
+    public static void outputPositiveLongScaled(long n, int scale, char separator, IntConsumer consumer) {
+        if (scale > 2) {
+            long m = n / 100;
+            outputPositiveLongScaled(m, scale - 2, separator, consumer);
+            output2Digits((int)(n - m * 100), consumer);
+        }
+        else if (scale == 2) {
+            long m = n / 100;
+            outputPositiveLong(m, consumer);
+            consumer.accept(separator);
+            output2Digits((int)(n - m * 100), consumer);
+        }
+        else if (scale == 1) {
+            long m = n / 10;
+            outputPositiveLong(m, consumer);
+            consumer.accept(separator);
+            consumer.accept(digits[(int)(n - m * 10)]);
+        }
+        else if (n >= 100) {
+            long m = n / 100;
+            outputPositiveLong(m, consumer);
+            output2Digits((int)(n - m * 100), consumer);
+        }
+        else {
+            int i = (int)n;
+            if (i >= 10)
+                consumer.accept(tensDigits[i]);
+            consumer.accept(digits[i]);
         }
     }
 
@@ -763,19 +1080,18 @@ public class IntOutput {
      */
     public static void outputIntGrouped(int i, char groupingChar, IntConsumer consumer) {
         if (i < 0) {
+            consumer.accept('-');
             if (i == Integer.MIN_VALUE) {
-                outputString(MIN_INTEGER_STRING, 0, 2, consumer);
+                consumer.accept(MIN_INTEGER_DIGITS.charAt(0));
                 consumer.accept(groupingChar);
-                outputString(MIN_INTEGER_STRING, 2, 5, consumer);
+                outputString(MIN_INTEGER_DIGITS, 1, 4, consumer);
                 consumer.accept(groupingChar);
-                outputString(MIN_INTEGER_STRING, 5, 8, consumer);
+                outputString(MIN_INTEGER_DIGITS, 4, 7, consumer);
                 consumer.accept(groupingChar);
-                outputString(MIN_INTEGER_STRING, 8, 11, consumer);
+                outputString(MIN_INTEGER_DIGITS, 7, 10, consumer);
             }
-            else {
-                consumer.accept('-');
+            else
                 outputPositiveIntGrouped(-i, groupingChar, consumer);
-            }
         }
         else
             outputPositiveIntGrouped(i, groupingChar, consumer);
@@ -842,25 +1158,24 @@ public class IntOutput {
      */
     public static void outputLongGrouped(long n, char groupingChar, IntConsumer consumer) {
         if (n < 0) {
+            consumer.accept('-');
             if (n == Long.MIN_VALUE) {
-                outputString(MIN_LONG_STRING, 0, 2, consumer);
+                consumer.accept(MIN_LONG_DIGITS.charAt(0));
                 consumer.accept(groupingChar);
-                outputString(MIN_LONG_STRING, 2, 5, consumer);
+                outputString(MIN_LONG_DIGITS, 1, 4, consumer);
                 consumer.accept(groupingChar);
-                outputString(MIN_LONG_STRING, 5, 8, consumer);
+                outputString(MIN_LONG_DIGITS, 4, 7, consumer);
                 consumer.accept(groupingChar);
-                outputString(MIN_LONG_STRING, 8, 11, consumer);
+                outputString(MIN_LONG_DIGITS, 7, 10, consumer);
                 consumer.accept(groupingChar);
-                outputString(MIN_LONG_STRING, 11, 14, consumer);
+                outputString(MIN_LONG_DIGITS, 10, 13, consumer);
                 consumer.accept(groupingChar);
-                outputString(MIN_LONG_STRING, 14, 17, consumer);
+                outputString(MIN_LONG_DIGITS, 13, 16, consumer);
                 consumer.accept(groupingChar);
-                outputString(MIN_LONG_STRING, 17, 20, consumer);
+                outputString(MIN_LONG_DIGITS, 16, 19, consumer);
             }
-            else {
-                consumer.accept('-');
+            else
                 outputPositiveLongGrouped(-n, groupingChar, consumer);
-            }
         }
         else
             outputPositiveLongGrouped(n, groupingChar, consumer);
