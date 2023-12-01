@@ -2,6 +2,12 @@
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/).
 
+## [2.1] - 2023-12-02
+### Changed
+- `IntOutput`: added `append1Digit` and `output1Digit`
+- `IntOutput`: added "Safe" versions of `append1Digit`, `output1Digit`, `append2Digits`, `output2Digits`,
+  `append3Digits` and `output3Digits`
+
 ## [2.0] - 2023-11-09
 ### Changed
 - `IntOutput`: minor tweaks / optimisations

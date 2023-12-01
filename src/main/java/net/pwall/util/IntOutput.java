@@ -358,13 +358,34 @@ public class IntOutput {
     }
 
     /**
+     * Append an {@code int} to an {@link Appendable} as a single decimal digit.  Note that there is no range check on
+     * the input value; to append the least significant digit in cases where the value is not guaranteed to be in the
+     * range 0..9, use {@link #append1DigitSafe}.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   i           the {@code int}
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void append1Digit(Appendable a, int i) throws IOException {
+        a.append((char)(i + '0'));
+    }
+
+    /**
+     * Append the least significant decimal digit of an {@code int} to an {@link Appendable}.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   i           the {@code int}
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void append1DigitSafe(Appendable a, int i) throws IOException {
+        a.append(i == Integer.MIN_VALUE ? '8' : (char)((Math.abs(i) % 10) + '0')); // 8 is last digit of MIN_VALUE
+    }
+
+    /**
      * Append an {@code int} to an {@link Appendable} as two decimal digits.  There is often a requirement to output a
      * number as 2 digits, for example the cents value in dollars and cents, or hours, minutes and seconds in a time
-     * string.  Note that there is no range check on the input value; to use this method in cases where the value is not
-     * guaranteed to be in the range 00-99, use:
-     * <pre>
-     *     IntOutput.append2Digits(a, Math.abs(i) % 100);
-     * </pre>
+     * string.  Note that there is no range check on the input value; to append the least significant two digits in
+     * cases where the value is not guaranteed to be in the range 00..99, use {@link #append2DigitsSafe}.
      *
      * @param   a           the {@link Appendable}
      * @param   i           the {@code int}
@@ -376,13 +397,23 @@ public class IntOutput {
     }
 
     /**
+     * Append the least significant two decimal digits of an {@code int} to an {@link Appendable}.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   i           the {@code int}
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void append2DigitsSafe(Appendable a, int i) throws IOException {
+        int n = i == Integer.MIN_VALUE ? 48 : Math.abs(i) % 100; // 48 is last two digits of MIN_VALUE
+        a.append(tensDigits[n]);
+        a.append(digits[n]);
+    }
+
+    /**
      * Append an {@code int} to an {@link Appendable} as three decimal digits.  There is less frequently a requirement
      * to output a number as 3 digits, for example the milliseconds in a time string.  Note that there is no range check
-     * on the input value; to use this method in cases where the value is not guaranteed to be in the range 000-999,
-     * use:
-     * <pre>
-     *     IntOutput.append3Digits(a, Math.abs(i) % 1000);
-     * </pre>
+     * on the input value; to append the least significant three digits in cases where the value is not guaranteed to be
+     * in the range 000..999, use {@link #append3DigitsSafe}.
      *
      * @param   a           the {@link Appendable}
      * @param   i           the {@code int}
@@ -392,6 +423,20 @@ public class IntOutput {
         int n = i / 100;
         a.append(digits[n]);
         append2Digits(a, i - n * 100);
+    }
+
+    /**
+     * Append the least significant three decimal digits of an {@code int} to an {@link Appendable}.
+     *
+     * @param   a           the {@link Appendable}
+     * @param   i           the {@code int}
+     * @throws  IOException if thrown by the {@link Appendable}
+     */
+    public static void append3DigitsSafe(Appendable a, int i) throws IOException {
+        int n = i == Integer.MIN_VALUE ? 648 : Math.abs(i) % 1000; // 648 is last three digits of MIN_VALUE
+        int m = n / 100;
+        a.append(digits[m]);
+        append2Digits(a, n - m * 100);
     }
 
     /**
@@ -1036,13 +1081,32 @@ public class IntOutput {
     }
 
     /**
+     * Output an {@code int} using an {@link IntConsumer} as a single decimal digit.  Note that there is no range check
+     * on the input value; to output the least significant digit in cases where the value is not guaranteed to be in the
+     * range 0..9, use {@link #output1DigitSafe}.
+     *
+     * @param   i           the {@code int}
+     * @param   consumer    the {@link IntConsumer}
+     */
+    public static void output1Digit(int i, IntConsumer consumer) {
+        consumer.accept(i + '0');
+    }
+
+    /**
+     * Output the least significant decimal digit of an {@code int} using an {@link IntConsumer}.
+     *
+     * @param   i           the {@code int}
+     * @param   consumer    the {@link IntConsumer}
+     */
+    public static void output1DigitSafe(int i, IntConsumer consumer) {
+        consumer.accept(i == Integer.MIN_VALUE ? '8' : (Math.abs(i) % 10) + '0'); // 8 is last digit of MIN_VALUE
+    }
+
+    /**
      * Output an {@code int} using an {@link IntConsumer} as two decimal digits.  There is often a requirement to output
      * a number as 2 digits, for example the cents value in dollars and cents, or hours, minutes and seconds in a time
-     * string.  Note that there is no range check on the input value; to use this method in cases where the value is not
-     * guaranteed to be in the range 00-99, use:
-     * <pre>
-     *     IntOutput.output2Digits(Math.abs(i) % 100, ch -&gt; sb.append((char)ch));
-     * </pre>
+     * string.  Note that there is no range check on the input value; to output the least significant two digits in
+     * cases where the value is not guaranteed to be in the range 00..99, use {@link #output2DigitsSafe}.
      *
      * @param   i           the {@code int}
      * @param   consumer    the {@link IntConsumer}
@@ -1053,13 +1117,22 @@ public class IntOutput {
     }
 
     /**
+     * Output the least significant two decimal digits of an {@code int} using an {@link IntConsumer}.
+     *
+     * @param   i           the {@code int}
+     * @param   consumer    the {@link IntConsumer}
+     */
+    public static void output2DigitsSafe(int i, IntConsumer consumer) {
+        int n = i == Integer.MIN_VALUE ? 48 : Math.abs(i) % 100; // 48 is last two digits of MIN_VALUE
+        consumer.accept(tensDigits[n]);
+        consumer.accept(digits[n]);
+    }
+
+    /**
      * Output an {@code int} using an {@link IntConsumer} as three decimal digits.  There is less frequently a
      * requirement to output a number as 3 digits, for example the milliseconds in a time string.  Note that there is no
-     * range check on the input value; to use this method in cases where the value is not guaranteed to be in the range
-     * 000-999, use:
-     * <pre>
-     *     IntOutput.output3Digits(Math.abs(i) % 1000, ch -&gt; sb.append((char)ch));
-     * </pre>
+     * range check on the input value; to output the least significant three digits in cases where the value is not
+     * guaranteed to be in the range 000..999, use {@link #output3DigitsSafe}.
      *
      * @param   i           the {@code int}
      * @param   consumer    the {@link IntConsumer}
@@ -1068,6 +1141,19 @@ public class IntOutput {
         int n = i / 100;
         consumer.accept(digits[n]);
         output2Digits(i - n * 100, consumer);
+    }
+
+    /**
+     * Output the least significant three decimal digits of an {@code int} using an {@link IntConsumer}.
+     *
+     * @param   i           the {@code int}
+     * @param   consumer    the {@link IntConsumer}
+     */
+    public static void output3DigitsSafe(int i, IntConsumer consumer) {
+        int n = i == Integer.MIN_VALUE ? 648 : Math.abs(i) % 1000; // 648 is last three digits of MIN_VALUE
+        int m = n / 100;
+        consumer.accept(digits[m]);
+        output2Digits(n - m * 100, consumer);
     }
 
     /**

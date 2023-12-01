@@ -25,7 +25,6 @@
 
 package net.pwall.util.test;
 
-import java.io.IOException;
 import java.util.function.IntConsumer;
 
 import org.junit.Test;
@@ -325,6 +324,34 @@ public class IntOutputIntConsumerTest {
     }
 
     @Test
+    public void shouldOutput1DigitCorrectlyUsingLambda() {
+        StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output1Digit(0, ic);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.output1Digit(1, ic);
+        assertEquals("1", sb.toString());
+        sb.setLength(0);
+        IntOutput.output1Digit(9, ic);
+        assertEquals("9", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput1DigitSafelyUsingLambda() {
+        StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output1DigitSafe(20, ic);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.output1DigitSafe(-61, ic);
+        assertEquals("1", sb.toString());
+        sb.setLength(0);
+        IntOutput.output1DigitSafe(999999, ic);
+        assertEquals("9", sb.toString());
+    }
+
+    @Test
     public void shouldOutput2DigitsCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
         IntConsumer ic = ch -> sb.append((char)ch);
@@ -335,6 +362,20 @@ public class IntOutputIntConsumerTest {
         assertEquals("01", sb.toString());
         sb.setLength(0);
         IntOutput.output2Digits(21, ic);
+        assertEquals("21", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput2DigitsSafelyUsingLambda() {
+        StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output2DigitsSafe(10000, ic);
+        assertEquals("00", sb.toString());
+        sb.setLength(0);
+        IntOutput.output2DigitsSafe(-501, ic);
+        assertEquals("01", sb.toString());
+        sb.setLength(0);
+        IntOutput.output2DigitsSafe(7654321, ic);
         assertEquals("21", sb.toString());
     }
 
@@ -352,6 +393,23 @@ public class IntOutputIntConsumerTest {
         assertEquals("021", sb.toString());
         sb.setLength(0);
         IntOutput.output3Digits(321, ic);
+        assertEquals("321", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput3DigitsSafelyUsingLambda() {
+        StringBuilder sb = new StringBuilder();
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output3DigitsSafe(2000, ic);
+        assertEquals("000", sb.toString());
+        sb.setLength(0);
+        IntOutput.output3DigitsSafe(-15001, ic);
+        assertEquals("001", sb.toString());
+        sb.setLength(0);
+        IntOutput.output3DigitsSafe(66021, ic);
+        assertEquals("021", sb.toString());
+        sb.setLength(0);
+        IntOutput.output3DigitsSafe(987654321, ic);
         assertEquals("321", sb.toString());
     }
 

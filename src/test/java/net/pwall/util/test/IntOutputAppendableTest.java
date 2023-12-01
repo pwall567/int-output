@@ -318,6 +318,32 @@ public class IntOutputAppendableTest {
     }
 
     @Test
+    public void shouldOutput1DigitCorrectly() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append1Digit(sb, 0);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.append1Digit(sb, 1);
+        assertEquals("1", sb.toString());
+        sb.setLength(0);
+        IntOutput.append1Digit(sb, 9);
+        assertEquals("9", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput1DigitSafely() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append1DigitSafe(sb, 50);
+        assertEquals("0", sb.toString());
+        sb.setLength(0);
+        IntOutput.append1DigitSafe(sb, -511);
+        assertEquals("1", sb.toString());
+        sb.setLength(0);
+        IntOutput.append1DigitSafe(sb, 99999999);
+        assertEquals("9", sb.toString());
+    }
+
+    @Test
     public void shouldOutput2DigitsCorrectly() throws IOException {
         StringBuilder sb = new StringBuilder();
         IntOutput.append2Digits(sb, 0);
@@ -327,6 +353,19 @@ public class IntOutputAppendableTest {
         assertEquals("01", sb.toString());
         sb.setLength(0);
         IntOutput.append2Digits(sb, 21);
+        assertEquals("21", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput2DigitsSafely() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append2DigitsSafe(sb, 5000);
+        assertEquals("00", sb.toString());
+        sb.setLength(0);
+        IntOutput.append2DigitsSafe(sb, -801);
+        assertEquals("01", sb.toString());
+        sb.setLength(0);
+        IntOutput.append2DigitsSafe(sb, 222221);
         assertEquals("21", sb.toString());
     }
 
@@ -343,6 +382,22 @@ public class IntOutputAppendableTest {
         assertEquals("021", sb.toString());
         sb.setLength(0);
         IntOutput.append3Digits(sb, 321);
+        assertEquals("321", sb.toString());
+    }
+
+    @Test
+    public void shouldOutput3DigitsSafely() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        IntOutput.append3DigitsSafe(sb, 5000);
+        assertEquals("000", sb.toString());
+        sb.setLength(0);
+        IntOutput.append3DigitsSafe(sb, 1234569001);
+        assertEquals("001", sb.toString());
+        sb.setLength(0);
+        IntOutput.append3DigitsSafe(sb, -4021);
+        assertEquals("021", sb.toString());
+        sb.setLength(0);
+        IntOutput.append3DigitsSafe(sb, 7654321);
         assertEquals("321", sb.toString());
     }
 

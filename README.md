@@ -58,8 +58,12 @@ several functions to output fixed-length strings left-padded with zeros.
 | `appendUnsignedLong`        | `long`    | left-trimmed (value is treated as unsigned)                                        |
 | `appendLongScaled`          | `long`    | left-trimmed with decimal separator as indicated by scale                          |
 | `appendPositiveLongScaled`  | `long`    | left-trimmed with decimal separator as indicated by scale (value must be positive) |
+| `append1Digit`              | `int`     | 1 digit                                                                            |
+| `append1DigitSafe`          | `int`     | 1 digit (safe version; performs modulo on value)                                   |
 | `append2Digits`             | `int`     | 2 digits left filled with zeros                                                    |
+| `append2DigitsSafe`         | `int`     | 2 digits left filled with zeros (safe version; performs modulo on value)           |
 | `append3Digits`             | `int`     | 3 digits left filled with zeros                                                    |
+| `append3DigitsSafe`         | `int`     | 3 digits left filled with zeros (safe version; performs modulo on value)           |
 | `appendIntGrouped`          | `int`     | left-trimmed, output in 3-digit groups                                             |
 | `appendPositiveIntGrouped`  | `int`     | left-trimmed, output in 3-digit groups (value must be positive)                    |
 | `appendLongGrouped`         | `long`    | left-trimmed, output in 3-digit groups                                             |
@@ -153,6 +157,13 @@ To output a `long` value to an `Appendable`, with number of decimal places speci
         IntOutput.appendLongScaled(sb, intValue, 3, '.'); // 3 decimal places with '.' as separator
 ```
 See the note above (following the `int` version of the function) regarding negative scale values.
+
+To output an `int` as 1 digit:
+```java
+        StringBuilder sb = new StringBuilder(12);
+        int count = 5;
+        IntOutput.append2Digits(sb, hours);
+```
 
 To output an `int` as 2 digits, including leading zero if required (for example, when outputting a time):
 ```java
@@ -259,25 +270,25 @@ The following code formats a money value, with dollar sign, commas, decimal poin
 
 ## Dependency Specification
 
-The latest version of the library is 2.0, and it may be obtained from the Maven Central repository.
+The latest version of the library is 2.1, and it may be obtained from the Maven Central repository.
 
 ### Maven
 ```xml
     <dependency>
       <groupId>net.pwall.util</groupId>
       <artifactId>int-output</artifactId>
-      <version>2.0</version>
+      <version>2.1</version>
     </dependency>
 ```
 ### Gradle
 ```groovy
-    implementation 'net.pwall.util:int-output:2.0'
+    implementation 'net.pwall.util:int-output:2.1'
 ```
 ### Gradle (kts)
 ```kotlin
-    implementation("net.pwall.util:int-output:2.0")
+    implementation("net.pwall.util:int-output:2.1")
 ```
 
 Peter Wall
 
-2023-11-09
+2023-12-02
