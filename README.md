@@ -1,6 +1,6 @@
 # int-output
 
-[![Build Status](https://travis-ci.com/pwall567/int-output.svg?branch=main)](https://app.travis-ci.com/github/pwall567/int-output)
+[![Build Status](https://github.com/pwall567/int-output/actions/workflows/build.yml/badge.svg)](https://github.com/pwall567/int-output/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Maven Central](https://img.shields.io/maven-central/v/net.pwall.util/int-output?label=Maven%20Central)](https://search.maven.org/search?q=g:%22net.pwall.util%22%20AND%20a:%22int-output%22)
 
@@ -291,4 +291,4 @@ The latest version of the library is 2.1, and it may be obtained from the Maven 
 
 Peter Wall
 
-2023-12-02
+2024-07-10
