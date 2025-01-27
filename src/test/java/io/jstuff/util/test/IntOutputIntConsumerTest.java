@@ -1,8 +1,8 @@
 /*
- * @(#) IntOutputAppendableTest.java
+ * @(#) IntOutputIntConsumerTest.java
  *
  * int-output  Integer output functions
- * Copyright (c) 2021, 2022, 2023 Peter Wall
+ * Copyright (c) 2022, 2023 Peter Wall
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,760 +23,766 @@
  * SOFTWARE.
  */
 
-package net.pwall.util.test;
+package io.jstuff.util.test;
 
-import java.io.IOException;
+import java.util.function.IntConsumer;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
-import net.pwall.util.IntOutput;
+import io.jstuff.util.IntOutput;
 
-public class IntOutputAppendableTest {
+public class IntOutputIntConsumerTest {
 
     @Test
-    public void shouldConvertIntCorrectly() throws IOException {
+    public void shouldConvertIntCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendInt(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputInt(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendInt(sb, 123456);
+        IntOutput.outputInt(123456, ic);
         assertEquals("123456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendInt(sb, -22334455);
+        IntOutput.outputInt(-22334455, ic);
         assertEquals("-22334455", sb.toString());
         sb.setLength(0);
-        IntOutput.appendInt(sb, Integer.MAX_VALUE);
+        IntOutput.outputInt(Integer.MAX_VALUE, ic);
         assertEquals("2147483647", sb.toString());
         sb.setLength(0);
-        IntOutput.appendInt(sb, Integer.MIN_VALUE);
+        IntOutput.outputInt(Integer.MIN_VALUE, ic);
         assertEquals("-2147483648", sb.toString());
     }
 
     @Test
-    public void shouldConvertUnsignedIntCorrectly() throws IOException {
+    public void shouldConvertUnsignedIntCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendUnsignedInt(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputUnsignedInt(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendUnsignedInt(sb, 123456);
+        IntOutput.outputUnsignedInt(123456, ic);
         assertEquals("123456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendUnsignedInt(sb, (int)2147483648L);
+        IntOutput.outputUnsignedInt((int)2147483648L, ic);
         assertEquals("2147483648", sb.toString());
         sb.setLength(0);
-        IntOutput.appendUnsignedInt(sb, (int)3456789012L);
+        IntOutput.outputUnsignedInt((int)3456789012L, ic);
         assertEquals("3456789012", sb.toString());
         sb.setLength(0);
-        IntOutput.appendUnsignedInt(sb, 0x89ABCDEF);
+        IntOutput.outputUnsignedInt(0x89ABCDEF, ic);
         assertEquals("2309737967", sb.toString());
     }
 
     @Test
-    public void shouldConvertIntScaled() throws IOException {
-        char separator = '.';
+    public void shouldConvertIntScaledUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendIntScaled(sb, 0, 0, separator);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        char separator = '.';
+        IntOutput.outputIntScaled(0, 0, separator, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, 0, 1, separator);
+        IntOutput.outputIntScaled(0, 1, separator, ic);
         assertEquals("0.0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, 0, 2, separator);
+        IntOutput.outputIntScaled(0, 2, separator, ic);
         assertEquals("0.00", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, 0, 3, separator);
+        IntOutput.outputIntScaled(0, 3, separator, ic);
         assertEquals("0.000", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, 123456, 0, separator);
+        IntOutput.outputIntScaled(123456, 0, separator, ic);
         assertEquals("123456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, 123456, 1, separator);
+        IntOutput.outputIntScaled(123456, 1, separator, ic);
         assertEquals("12345.6", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, 123456, 2, separator);
+        IntOutput.outputIntScaled(123456, 2, separator, ic);
         assertEquals("1234.56", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, 123456, 3, separator);
+        IntOutput.outputIntScaled(123456, 3, separator, ic);
         assertEquals("123.456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, 123456, 6, separator);
+        IntOutput.outputIntScaled(123456, 6, separator, ic);
         assertEquals("0.123456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, 123456, 7, separator);
+        IntOutput.outputIntScaled(123456, 7, separator, ic);
         assertEquals("0.0123456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, 123456, 8, separator);
+        IntOutput.outputIntScaled(123456, 8, separator, ic);
         assertEquals("0.00123456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, -22334455, 0, separator);
+        IntOutput.outputIntScaled(-22334455, 0, separator, ic);
         assertEquals("-22334455", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, -22334455, 1, separator);
+        IntOutput.outputIntScaled(-22334455, 1, separator, ic);
         assertEquals("-2233445.5", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, -22334455, 2, separator);
+        IntOutput.outputIntScaled(-22334455, 2, separator, ic);
         assertEquals("-223344.55", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, -22334455, 3, separator);
+        IntOutput.outputIntScaled(-22334455, 3, separator, ic);
         assertEquals("-22334.455", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MAX_VALUE, 0, separator);
+        IntOutput.outputIntScaled(Integer.MAX_VALUE, 0, separator, ic);
         assertEquals("2147483647", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MAX_VALUE, 1, separator);
+        IntOutput.outputIntScaled(Integer.MAX_VALUE, 1, separator, ic);
         assertEquals("214748364.7", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MAX_VALUE, 2, separator);
+        IntOutput.outputIntScaled(Integer.MAX_VALUE, 2, separator, ic);
         assertEquals("21474836.47", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MAX_VALUE, 3, separator);
+        IntOutput.outputIntScaled(Integer.MAX_VALUE, 3, separator, ic);
         assertEquals("2147483.647", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MIN_VALUE, 0, separator);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 0, separator, ic);
         assertEquals("-2147483648", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MIN_VALUE, 1, separator);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 1, separator, ic);
         assertEquals("-214748364.8", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MIN_VALUE, 2, separator);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 2, separator, ic);
         assertEquals("-21474836.48", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MIN_VALUE, 3, separator);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 3, separator, ic);
         assertEquals("-2147483.648", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MIN_VALUE, 10, separator);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 10, separator, ic);
         assertEquals("-0.2147483648", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MIN_VALUE, 11, separator);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 11, separator, ic);
         assertEquals("-0.02147483648", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntScaled(sb, Integer.MIN_VALUE, 12, separator);
+        IntOutput.outputIntScaled(Integer.MIN_VALUE, 12, separator, ic);
         assertEquals("-0.002147483648", sb.toString());
     }
 
     @Test
-    public void shouldConvertLongCorrectly() throws IOException {
+    public void shouldConvertLongCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendLong(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputLong(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLong(sb, 123456789012345678L);
+        IntOutput.outputLong(123456789012345678L, ic);
         assertEquals("123456789012345678", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLong(sb, -2233445566778899L);
+        IntOutput.outputLong(-2233445566778899L, ic);
         assertEquals("-2233445566778899", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLong(sb, Integer.MAX_VALUE);
+        IntOutput.outputLong(Integer.MAX_VALUE, ic);
         assertEquals("2147483647", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLong(sb, Integer.MIN_VALUE);
+        IntOutput.outputLong(Integer.MIN_VALUE, ic);
         assertEquals("-2147483648", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLong(sb, Long.MAX_VALUE);
+        IntOutput.outputLong(Long.MAX_VALUE, ic);
         assertEquals("9223372036854775807", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLong(sb, Long.MIN_VALUE);
+        IntOutput.outputLong(Long.MIN_VALUE, ic);
         assertEquals("-9223372036854775808", sb.toString());
     }
 
     @Test
-    public void shouldConvertUnsignedLongCorrectly() throws IOException {
+    public void shouldConvertUnsignedLongCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendUnsignedLong(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputUnsignedLong(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendUnsignedLong(sb, 1234567890123456789L);
+        IntOutput.outputUnsignedLong(1234567890123456789L, ic);
         assertEquals("1234567890123456789", sb.toString());
         sb.setLength(0);
         long n = Long.MAX_VALUE;
-        IntOutput.appendUnsignedLong(sb, n + 1);
+        IntOutput.outputUnsignedLong(n + 1, ic);
         assertEquals("9223372036854775808", sb.toString());
         sb.setLength(0);
         n = 1234567890123456789L;
-        IntOutput.appendUnsignedLong(sb, n * 10);
+        IntOutput.outputUnsignedLong(n * 10, ic);
         assertEquals("12345678901234567890", sb.toString());
     }
 
     @Test
-    public void shouldConvertLongScaled() throws IOException {
+    public void shouldConvertLongScaled() {
         char separator = '.';
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendLongScaled(sb, 0, 0, separator);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputLongScaled(0, 0, separator, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 0, 1, separator);
+        IntOutput.outputLongScaled(0, 1, separator, ic);
         assertEquals("0.0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 0, 2, separator);
+        IntOutput.outputLongScaled(0, 2, separator, ic);
         assertEquals("0.00", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 0, 3, separator);
+        IntOutput.outputLongScaled(0, 3, separator, ic);
         assertEquals("0.000", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456, 0, separator);
+        IntOutput.outputLongScaled(123456, 0, separator, ic);
         assertEquals("123456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456, 1, separator);
+        IntOutput.outputLongScaled(123456, 1, separator, ic);
         assertEquals("12345.6", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456, 2, separator);
+        IntOutput.outputLongScaled(123456, 2, separator, ic);
         assertEquals("1234.56", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456, 3, separator);
+        IntOutput.outputLongScaled(123456, 3, separator, ic);
         assertEquals("123.456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456, 6, separator);
+        IntOutput.outputLongScaled(123456, 6, separator, ic);
         assertEquals("0.123456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456, 7, separator);
+        IntOutput.outputLongScaled(123456, 7, separator, ic);
         assertEquals("0.0123456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456, 8, separator);
+        IntOutput.outputLongScaled(123456, 8, separator, ic);
         assertEquals("0.00123456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, -22334455, 0, separator);
+        IntOutput.outputLongScaled(-22334455, 0, separator, ic);
         assertEquals("-22334455", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, -22334455, 1, separator);
+        IntOutput.outputLongScaled(-22334455, 1, separator, ic);
         assertEquals("-2233445.5", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, -22334455, 2, separator);
+        IntOutput.outputLongScaled(-22334455, 2, separator, ic);
         assertEquals("-223344.55", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, -22334455, 3, separator);
+        IntOutput.outputLongScaled(-22334455, 3, separator, ic);
         assertEquals("-22334.455", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456789012345678L, 0, separator);
+        IntOutput.outputLongScaled(123456789012345678L, 0, separator, ic);
         assertEquals("123456789012345678", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456789012345678L, 1, separator);
+        IntOutput.outputLongScaled(123456789012345678L, 1, separator, ic);
         assertEquals("12345678901234567.8", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456789012345678L, 2, separator);
+        IntOutput.outputLongScaled(123456789012345678L, 2, separator, ic);
         assertEquals("1234567890123456.78", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456789012345678L, 3, separator);
+        IntOutput.outputLongScaled(123456789012345678L, 3, separator, ic);
         assertEquals("123456789012345.678", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456789012345678L, 18, separator);
+        IntOutput.outputLongScaled(123456789012345678L, 18, separator, ic);
         assertEquals("0.123456789012345678", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456789012345678L, 19, separator);
+        IntOutput.outputLongScaled(123456789012345678L, 19, separator, ic);
         assertEquals("0.0123456789012345678", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, 123456789012345678L, 20, separator);
+        IntOutput.outputLongScaled(123456789012345678L, 20, separator, ic);
         assertEquals("0.00123456789012345678", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, -2233445566778899L, 0, separator);
+        IntOutput.outputLongScaled(-2233445566778899L, 0, separator, ic);
         assertEquals("-2233445566778899", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, -2233445566778899L, 1, separator);
+        IntOutput.outputLongScaled(-2233445566778899L, 1, separator, ic);
         assertEquals("-223344556677889.9", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, -2233445566778899L, 16, separator);
+        IntOutput.outputLongScaled(-2233445566778899L, 16, separator, ic);
         assertEquals("-0.2233445566778899", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, -2233445566778899L, 17, separator);
+        IntOutput.outputLongScaled(-2233445566778899L, 17, separator, ic);
         assertEquals("-0.02233445566778899", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MAX_VALUE, 0, separator);
+        IntOutput.outputLongScaled(Long.MAX_VALUE, 0, separator, ic);
         assertEquals("9223372036854775807", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MAX_VALUE, 1, separator);
+        IntOutput.outputLongScaled(Long.MAX_VALUE, 1, separator, ic);
         assertEquals("922337203685477580.7", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MAX_VALUE, 2, separator);
+        IntOutput.outputLongScaled(Long.MAX_VALUE, 2, separator, ic);
         assertEquals("92233720368547758.07", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MAX_VALUE, 3, separator);
+        IntOutput.outputLongScaled(Long.MAX_VALUE, 3, separator, ic);
         assertEquals("9223372036854775.807", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MIN_VALUE, 0, separator);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 0, separator, ic);
         assertEquals("-9223372036854775808", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MIN_VALUE, 1, separator);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 1, separator, ic);
         assertEquals("-922337203685477580.8", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MIN_VALUE, 2, separator);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 2, separator, ic);
         assertEquals("-92233720368547758.08", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MIN_VALUE, 3, separator);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 3, separator, ic);
         assertEquals("-9223372036854775.808", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MIN_VALUE, 10, separator);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 10, separator, ic);
         assertEquals("-922337203.6854775808", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MIN_VALUE, 19, separator);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 19, separator, ic);
         assertEquals("-0.9223372036854775808", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MIN_VALUE, 20, separator);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 20, separator, ic);
         assertEquals("-0.09223372036854775808", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongScaled(sb, Long.MIN_VALUE, 21, separator);
+        IntOutput.outputLongScaled(Long.MIN_VALUE, 21, separator, ic);
         assertEquals("-0.009223372036854775808", sb.toString());
     }
 
     @Test
-    public void shouldOutput1DigitCorrectly() throws IOException {
+    public void shouldOutput1DigitCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append1Digit(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output1Digit(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.append1Digit(sb, 1);
+        IntOutput.output1Digit(1, ic);
         assertEquals("1", sb.toString());
         sb.setLength(0);
-        IntOutput.append1Digit(sb, 9);
+        IntOutput.output1Digit(9, ic);
         assertEquals("9", sb.toString());
     }
 
     @Test
-    public void shouldOutput1DigitSafely() throws IOException {
+    public void shouldOutput1DigitSafelyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append1DigitSafe(sb, 50);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output1DigitSafe(20, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.append1DigitSafe(sb, -511);
+        IntOutput.output1DigitSafe(-61, ic);
         assertEquals("1", sb.toString());
         sb.setLength(0);
-        IntOutput.append1DigitSafe(sb, 99999999);
+        IntOutput.output1DigitSafe(999999, ic);
         assertEquals("9", sb.toString());
     }
 
     @Test
-    public void shouldOutput2DigitsCorrectly() throws IOException {
+    public void shouldOutput2DigitsCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append2Digits(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output2Digits(0, ic);
         assertEquals("00", sb.toString());
         sb.setLength(0);
-        IntOutput.append2Digits(sb, 1);
+        IntOutput.output2Digits(1, ic);
         assertEquals("01", sb.toString());
         sb.setLength(0);
-        IntOutput.append2Digits(sb, 21);
+        IntOutput.output2Digits(21, ic);
         assertEquals("21", sb.toString());
     }
 
     @Test
-    public void shouldOutput2DigitsSafely() throws IOException {
+    public void shouldOutput2DigitsSafelyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append2DigitsSafe(sb, 5000);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output2DigitsSafe(10000, ic);
         assertEquals("00", sb.toString());
         sb.setLength(0);
-        IntOutput.append2DigitsSafe(sb, -801);
+        IntOutput.output2DigitsSafe(-501, ic);
         assertEquals("01", sb.toString());
         sb.setLength(0);
-        IntOutput.append2DigitsSafe(sb, 222221);
+        IntOutput.output2DigitsSafe(7654321, ic);
         assertEquals("21", sb.toString());
     }
 
     @Test
-    public void shouldOutput3DigitsCorrectly() throws IOException {
+    public void shouldOutput3DigitsCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append3Digits(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output3Digits(0, ic);
         assertEquals("000", sb.toString());
         sb.setLength(0);
-        IntOutput.append3Digits(sb, 1);
+        IntOutput.output3Digits(1, ic);
         assertEquals("001", sb.toString());
         sb.setLength(0);
-        IntOutput.append3Digits(sb, 21);
+        IntOutput.output3Digits(21, ic);
         assertEquals("021", sb.toString());
         sb.setLength(0);
-        IntOutput.append3Digits(sb, 321);
+        IntOutput.output3Digits(321, ic);
         assertEquals("321", sb.toString());
     }
 
     @Test
-    public void shouldOutput3DigitsSafely() throws IOException {
+    public void shouldOutput3DigitsSafelyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append3DigitsSafe(sb, 5000);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output3DigitsSafe(2000, ic);
         assertEquals("000", sb.toString());
         sb.setLength(0);
-        IntOutput.append3DigitsSafe(sb, 1234569001);
+        IntOutput.output3DigitsSafe(-15001, ic);
         assertEquals("001", sb.toString());
         sb.setLength(0);
-        IntOutput.append3DigitsSafe(sb, -4021);
+        IntOutput.output3DigitsSafe(66021, ic);
         assertEquals("021", sb.toString());
         sb.setLength(0);
-        IntOutput.append3DigitsSafe(sb, 7654321);
+        IntOutput.output3DigitsSafe(987654321, ic);
         assertEquals("321", sb.toString());
     }
 
     @Test
-    public void shouldOutputIntegerWithGrouping() throws IOException {
+    public void shouldOutputIntegerWithGroupingUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendIntGrouped(sb, 0, ',');
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputIntGrouped(0, ',', ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, 1, ',');
+        IntOutput.outputIntGrouped(1, ',', ic);
         assertEquals("1", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, 123, ',');
+        IntOutput.outputIntGrouped(123, ',', ic);
         assertEquals("123", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, 1234, ',');
+        IntOutput.outputIntGrouped(1234, ',', ic);
         assertEquals("1,234", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, 12345, ',');
+        IntOutput.outputIntGrouped(12345, ',', ic);
         assertEquals("12,345", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, 123456, ',');
+        IntOutput.outputIntGrouped(123456, ',', ic);
         assertEquals("123,456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, 1234567, ',');
+        IntOutput.outputIntGrouped(1234567, ',', ic);
         assertEquals("1,234,567", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, 12345678, ',');
+        IntOutput.outputIntGrouped(12345678, ',', ic);
         assertEquals("12,345,678", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, 123456789, ',');
+        IntOutput.outputIntGrouped(123456789, ',', ic);
         assertEquals("123,456,789", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, 1234567890, ',');
+        IntOutput.outputIntGrouped(1234567890, ',', ic);
         assertEquals("1,234,567,890", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, Integer.MAX_VALUE, ',');
+        IntOutput.outputIntGrouped(Integer.MAX_VALUE, ',', ic);
         assertEquals("2,147,483,647", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntGrouped(sb, Integer.MIN_VALUE, ',');
+        IntOutput.outputIntGrouped(Integer.MIN_VALUE, ',', ic);
         assertEquals("-2,147,483,648", sb.toString());
     }
 
     @Test
-    public void shouldOutputLongWithGrouping() throws IOException {
+    public void shouldOutputLongWithGroupingUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendLongGrouped(sb, 0, ',');
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputLongGrouped(0, ',', ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 1, ',');
+        IntOutput.outputLongGrouped(1, ',', ic);
         assertEquals("1", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 123, ',');
+        IntOutput.outputLongGrouped(123, ',', ic);
         assertEquals("123", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 1234, ',');
+        IntOutput.outputLongGrouped(1234, ',', ic);
         assertEquals("1,234", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 12345, ',');
+        IntOutput.outputLongGrouped(12345, ',', ic);
         assertEquals("12,345", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 123456, ',');
+        IntOutput.outputLongGrouped(123456, ',', ic);
         assertEquals("123,456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 1234567, ',');
+        IntOutput.outputLongGrouped(1234567, ',', ic);
         assertEquals("1,234,567", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 12345678, ',');
+        IntOutput.outputLongGrouped(12345678, ',', ic);
         assertEquals("12,345,678", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 123456789, ',');
+        IntOutput.outputLongGrouped(123456789, ',', ic);
         assertEquals("123,456,789", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 1234567890, ',');
+        IntOutput.outputLongGrouped(1234567890, ',', ic);
         assertEquals("1,234,567,890", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 12345678901L, ',');
+        IntOutput.outputLongGrouped(12345678901L, ',', ic);
         assertEquals("12,345,678,901", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 123456789012L, ',');
+        IntOutput.outputLongGrouped(123456789012L, ',', ic);
         assertEquals("123,456,789,012", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 1234567890123L, ',');
+        IntOutput.outputLongGrouped(1234567890123L, ',', ic);
         assertEquals("1,234,567,890,123", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 12345678901234L, ',');
+        IntOutput.outputLongGrouped(12345678901234L, ',', ic);
         assertEquals("12,345,678,901,234", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 123456789012345L, ',');
+        IntOutput.outputLongGrouped(123456789012345L, ',', ic);
         assertEquals("123,456,789,012,345", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 1234567890123456L, ',');
+        IntOutput.outputLongGrouped(1234567890123456L, ',', ic);
         assertEquals("1,234,567,890,123,456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 12345678901234567L, ',');
+        IntOutput.outputLongGrouped(12345678901234567L, ',', ic);
         assertEquals("12,345,678,901,234,567", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 123456789012345678L, ',');
+        IntOutput.outputLongGrouped(123456789012345678L, ',', ic);
         assertEquals("123,456,789,012,345,678", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, 1234567890123456789L, ',');
+        IntOutput.outputLongGrouped(1234567890123456789L, ',', ic);
         assertEquals("1,234,567,890,123,456,789", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, Long.MAX_VALUE, ',');
+        IntOutput.outputLongGrouped(Long.MAX_VALUE, ',', ic);
         assertEquals("9,223,372,036,854,775,807", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongGrouped(sb, Long.MIN_VALUE, ',');
+        IntOutput.outputLongGrouped(Long.MIN_VALUE, ',', ic);
         assertEquals("-9,223,372,036,854,775,808", sb.toString());
     }
 
     @Test
-    public void shouldFormatMoney() {
-        assertEquals("$1.00", formatMoney(1, 0));
-        assertEquals("$1,234.56", formatMoney(1234, 56));
-    }
-
-    private String formatMoney(long dollars, int cents) {
-        StringBuilder sb = new StringBuilder(32);
-        try {
-            sb.append('$');
-            IntOutput.appendPositiveLongGrouped(sb, dollars, ',');
-            sb.append('.');
-            IntOutput.append2Digits(sb, cents);
-        }
-        catch (IOException ignore) {
-            // can't happen - StringBuilder doesn't throw IOException
-        }
-        return sb.toString();
-    }
-
-    @Test
-    public void shouldConvertIntToHexCorrectly() throws IOException {
+    public void shouldConvertIntToHexCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendIntHex(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputIntHex(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHex(sb, 1);
+        IntOutput.outputIntHex(1, ic);
         assertEquals("1", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHex(sb, 0x23);
+        IntOutput.outputIntHex(0x23, ic);
         assertEquals("23", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHex(sb, 0x456);
+        IntOutput.outputIntHex(0x456, ic);
         assertEquals("456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHex(sb, 0xA7B9);
+        IntOutput.outputIntHex(0xA7B9, ic);
         assertEquals("A7B9", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHex(sb, 0x8A1B1);
+        IntOutput.outputIntHex(0x8A1B1, ic);
         assertEquals("8A1B1", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHex(sb, 0xFEEABC);
+        IntOutput.outputIntHex(0xFEEABC, ic);
         assertEquals("FEEABC", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHex(sb, 0xDEADFEED);
+        IntOutput.outputIntHex(0xDEADFEED, ic);
         assertEquals("DEADFEED", sb.toString());
     }
 
     @Test
-    public void shouldConvertIntToHexCorrectlyUsingLowerCase() throws IOException {
+    public void shouldConvertIntToHexCorrectlyInLowerCaseUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendIntHexLC(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputIntHexLC(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHexLC(sb, 1);
+        IntOutput.outputIntHexLC(1, ic);
         assertEquals("1", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHexLC(sb, 0x23);
+        IntOutput.outputIntHexLC(0x23, ic);
         assertEquals("23", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHexLC(sb, 0x456);
+        IntOutput.outputIntHexLC(0x456, ic);
         assertEquals("456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHexLC(sb, 0xA7B9);
+        IntOutput.outputIntHexLC(0xA7B9, ic);
         assertEquals("a7b9", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHexLC(sb, 0x8A1B1);
+        IntOutput.outputIntHexLC(0x8A1B1, ic);
         assertEquals("8a1b1", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHexLC(sb, 0xFEEABC);
+        IntOutput.outputIntHexLC(0xFEEABC, ic);
         assertEquals("feeabc", sb.toString());
         sb.setLength(0);
-        IntOutput.appendIntHexLC(sb, 0xDEADFEED);
+        IntOutput.outputIntHexLC(0xDEADFEED, ic);
         assertEquals("deadfeed", sb.toString());
     }
 
     @Test
-    public void shouldConvertLongToHexCorrectly() throws IOException {
+    public void shouldConvertLongToHexCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendLongHex(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputLongHex(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHex(sb, 1);
+        IntOutput.outputLongHex(1, ic);
         assertEquals("1", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHex(sb, 0x23);
+        IntOutput.outputLongHex(0x23, ic);
         assertEquals("23", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHex(sb, 0x456);
+        IntOutput.outputLongHex(0x456, ic);
         assertEquals("456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHex(sb, 0xA7B9);
+        IntOutput.outputLongHex(0xA7B9, ic);
         assertEquals("A7B9", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHex(sb, 0x8A1B1);
+        IntOutput.outputLongHex(0x8A1B1, ic);
         assertEquals("8A1B1", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHex(sb, 0xFEEABC);
+        IntOutput.outputLongHex(0xFEEABC, ic);
         assertEquals("FEEABC", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHex(sb, 0xDEADFEEDL);
+        IntOutput.outputLongHex(0xDEADFEEDL, ic);
         assertEquals("DEADFEED", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHex(sb, 0x123DEADFEEDL);
+        IntOutput.outputLongHex(0x123DEADFEEDL, ic);
         assertEquals("123DEADFEED", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHex(sb, 0x8000000000000000L);
+        IntOutput.outputLongHex(0x8000000000000000L, ic);
         assertEquals("8000000000000000", sb.toString());
     }
 
     @Test
-    public void shouldConvertLongToHexCorrectlyUsingLowerCase() throws IOException {
+    public void shouldConvertLongToHexCorrectlyInLowerCaseUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.appendLongHexLC(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.outputLongHexLC(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHexLC(sb, 1);
+        IntOutput.outputLongHexLC(1, ic);
         assertEquals("1", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHexLC(sb, 0x23);
+        IntOutput.outputLongHexLC(0x23, ic);
         assertEquals("23", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHexLC(sb, 0x456);
+        IntOutput.outputLongHexLC(0x456, ic);
         assertEquals("456", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHexLC(sb, 0xA7B9);
+        IntOutput.outputLongHexLC(0xA7B9, ic);
         assertEquals("a7b9", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHexLC(sb, 0x8A1B1);
+        IntOutput.outputLongHexLC(0x8A1B1, ic);
         assertEquals("8a1b1", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHexLC(sb, 0xFEEABC);
+        IntOutput.outputLongHexLC(0xFEEABC, ic);
         assertEquals("feeabc", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHexLC(sb, 0xDEADFEEDL);
+        IntOutput.outputLongHexLC(0xDEADFEEDL, ic);
         assertEquals("deadfeed", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHexLC(sb, 0x123DEADFEEDL);
+        IntOutput.outputLongHexLC(0x123DEADFEEDL, ic);
         assertEquals("123deadfeed", sb.toString());
         sb.setLength(0);
-        IntOutput.appendLongHexLC(sb, 0x8000000000000000L);
+        IntOutput.outputLongHexLC(0x8000000000000000L, ic);
         assertEquals("8000000000000000", sb.toString());
     }
 
     @Test
-    public void shouldOutput8DigitsHexCorrectly() throws IOException {
+    public void shouldOutput8DigitsHexCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append8Hex(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output8Hex(0, ic);
         assertEquals("00000000", sb.toString());
         sb.setLength(0);
-        IntOutput.append8Hex(sb, 1);
+        IntOutput.output8Hex(1, ic);
         assertEquals("00000001", sb.toString());
         sb.setLength(0);
-        IntOutput.append8Hex(sb, 0xABCD);
+        IntOutput.output8Hex(0xABCD, ic);
         assertEquals("0000ABCD", sb.toString());
         sb.setLength(0);
-        IntOutput.append8Hex(sb, 0x9ABCD);
+        IntOutput.output8Hex(0x9ABCD, ic);
         assertEquals("0009ABCD", sb.toString());
         sb.setLength(0);
-        IntOutput.append8Hex(sb, 0x89ABCD);
+        IntOutput.output8Hex(0x89ABCD, ic);
         assertEquals("0089ABCD", sb.toString());
         sb.setLength(0);
-        IntOutput.append8Hex(sb, 0xE89ABCD);
+        IntOutput.output8Hex(0xE89ABCD, ic);
         assertEquals("0E89ABCD", sb.toString());
         sb.setLength(0);
-        IntOutput.append8Hex(sb, 0x7E89ABCD);
+        IntOutput.output8Hex(0x7E89ABCD, ic);
         assertEquals("7E89ABCD", sb.toString());
     }
 
     @Test
-    public void shouldOutput8DigitsHexCorrectlyUsingLowerCase() throws IOException {
+    public void shouldOutput8DigitsHexCorrectlyInLowerCaseUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append8HexLC(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output8HexLC(0, ic);
         assertEquals("00000000", sb.toString());
         sb.setLength(0);
-        IntOutput.append8HexLC(sb, 1);
+        IntOutput.output8HexLC(1, ic);
         assertEquals("00000001", sb.toString());
         sb.setLength(0);
-        IntOutput.append8HexLC(sb, 0xABCD);
+        IntOutput.output8HexLC(0xABCD, ic);
         assertEquals("0000abcd", sb.toString());
         sb.setLength(0);
-        IntOutput.append8HexLC(sb, 0x9ABCD);
+        IntOutput.output8HexLC(0x9ABCD, ic);
         assertEquals("0009abcd", sb.toString());
         sb.setLength(0);
-        IntOutput.append8HexLC(sb, 0x89ABCD);
+        IntOutput.output8HexLC(0x89ABCD, ic);
         assertEquals("0089abcd", sb.toString());
         sb.setLength(0);
-        IntOutput.append8HexLC(sb, 0xE89ABCD);
+        IntOutput.output8HexLC(0xE89ABCD, ic);
         assertEquals("0e89abcd", sb.toString());
         sb.setLength(0);
-        IntOutput.append8HexLC(sb, 0xFE89ABCD);
+        IntOutput.output8HexLC(0xFE89ABCD, ic);
         assertEquals("fe89abcd", sb.toString());
     }
 
     @Test
-    public void shouldOutput4DigitsHexCorrectly() throws IOException {
+    public void shouldOutput4DigitsHexCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append4Hex(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output4Hex(0, ic);
         assertEquals("0000", sb.toString());
         sb.setLength(0);
-        IntOutput.append4Hex(sb, 1);
+        IntOutput.output4Hex(1, ic);
         assertEquals("0001", sb.toString());
         sb.setLength(0);
-        IntOutput.append4Hex(sb, 0xABCD);
+        IntOutput.output4Hex(0xABCD, ic);
         assertEquals("ABCD", sb.toString());
     }
 
     @Test
-    public void shouldOutput4DigitsHexCorrectlyUsingLowerCase() throws IOException {
+    public void shouldOutput4DigitsHexCorrectlyInLowerCaseUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append4HexLC(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output4HexLC(0, ic);
         assertEquals("0000", sb.toString());
         sb.setLength(0);
-        IntOutput.append4HexLC(sb, 1);
+        IntOutput.output4HexLC(1, ic);
         assertEquals("0001", sb.toString());
         sb.setLength(0);
-        IntOutput.append4HexLC(sb, 0xABCD);
+        IntOutput.output4HexLC(0xABCD, ic);
         assertEquals("abcd", sb.toString());
     }
 
     @Test
-    public void shouldOutput2DigitsHexCorrectly() throws IOException {
+    public void shouldOutput2DigitsHexCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append2Hex(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output2Hex(0, ic);
         assertEquals("00", sb.toString());
         sb.setLength(0);
-        IntOutput.append2Hex(sb, 1);
+        IntOutput.output2Hex(1, ic);
         assertEquals("01", sb.toString());
         sb.setLength(0);
-        IntOutput.append2Hex(sb, 0xAB);
+        IntOutput.output2Hex(0xAB, ic);
         assertEquals("AB", sb.toString());
     }
 
     @Test
-    public void shouldOutput2DigitsHexCorrectlyUsingLowerCase() throws IOException {
+    public void shouldOutput2DigitsHexCorrectlyInLowerCaseUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append2HexLC(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output2HexLC(0, ic);
         assertEquals("00", sb.toString());
         sb.setLength(0);
-        IntOutput.append2HexLC(sb, 1);
+        IntOutput.output2HexLC(1, ic);
         assertEquals("01", sb.toString());
         sb.setLength(0);
-        IntOutput.append2HexLC(sb, 0xAB);
+        IntOutput.output2HexLC(0xAB, ic);
         assertEquals("ab", sb.toString());
     }
 
     @Test
-    public void shouldOutput1DigitHexCorrectly() throws IOException {
+    public void shouldOutput1DigitHexCorrectlyUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append1Hex(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output1Hex(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.append1Hex(sb, 1);
+        IntOutput.output1Hex(1, ic);
         assertEquals("1", sb.toString());
         sb.setLength(0);
-        IntOutput.append1Hex(sb, 0xA);
+        IntOutput.output1Hex(0xA, ic);
         assertEquals("A", sb.toString());
     }
 
     @Test
-    public void shouldOutput1DigitHexCorrectlyUsingLowerCase() throws IOException {
+    public void shouldOutput1DigitHexCorrectlyInLowerCaseUsingLambda() {
         StringBuilder sb = new StringBuilder();
-        IntOutput.append1HexLC(sb, 0);
+        IntConsumer ic = ch -> sb.append((char)ch);
+        IntOutput.output1HexLC(0, ic);
         assertEquals("0", sb.toString());
         sb.setLength(0);
-        IntOutput.append1HexLC(sb, 1);
+        IntOutput.output1HexLC(1, ic);
         assertEquals("1", sb.toString());
         sb.setLength(0);
-        IntOutput.append1HexLC(sb, 0xA);
+        IntOutput.output1HexLC(0xA, ic);
         assertEquals("a", sb.toString());
     }
 

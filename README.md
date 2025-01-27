@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/pwall567/int-output/actions/workflows/build.yml/badge.svg)](https://github.com/pwall567/int-output/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Maven Central](https://img.shields.io/maven-central/v/net.pwall.util/int-output?label=Maven%20Central)](https://search.maven.org/search?q=g:%22net.pwall.util%22%20AND%20a:%22int-output%22)
+[![Maven Central](https://img.shields.io/maven-central/v/io.jstuff/int-output?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.jstuff%22%20AND%20a:%22int-output%22)
 
 Integer output functions
 
@@ -270,25 +270,25 @@ The following code formats a money value, with dollar sign, commas, decimal poin
 
 ## Dependency Specification
 
-The latest version of the library is 2.1, and it may be obtained from the Maven Central repository.
+The latest version of the library is 3.0, and it may be obtained from the Maven Central repository.
 
 ### Maven
 ```xml
     <dependency>
-      <groupId>net.pwall.util</groupId>
+      <groupId>io.jstuff</groupId>
       <artifactId>int-output</artifactId>
-      <version>2.1</version>
+      <version>3.0</version>
     </dependency>
 ```
 ### Gradle
 ```groovy
-    implementation 'net.pwall.util:int-output:2.1'
+    implementation 'io.jstuff:int-output:3.0'
 ```
 ### Gradle (kts)
 ```kotlin
-    implementation("net.pwall.util:int-output:2.1")
+    implementation("io.jstuff:int-output:3.0")
 ```
 
 Peter Wall
 
-2024-07-10
+2025-01-28

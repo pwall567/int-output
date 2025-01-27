@@ -23,7 +23,7 @@
  * SOFTWARE.
  */
 
-package net.pwall.util;
+package io.jstuff.util;
 
 import java.io.IOException;
 import java.util.function.IntConsumer;
@@ -290,7 +290,7 @@ public class IntOutput {
     }
 
     /**
-     * Append an {@code int} left-trimmed to an {@link Appendable}, using a scale parameter to indicate the number of
+     * Append a {@code long} left-trimmed to an {@link Appendable}, using a scale parameter to indicate the number of
      * decimal places.  This method outputs the digits left to right, avoiding the need to allocate a separate object to
      * hold the string form.
      * <br>
